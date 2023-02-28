@@ -10,15 +10,19 @@ import {
 } from "@mui/material";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import { useThemeUpdate } from "../context/themeContext";
 const Navbar = () => {
   const theme = useTheme();
+  const updateTheme = useThemeUpdate()
   console.log(theme);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar>
-        <Toolbar sx={{
-            justifyContent: 'space-between',
-        }}>
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+          }}
+        >
           <IconButton>
             <Typography variant="h4" color={theme.palette.primary.contrastText}>
               V
@@ -30,11 +34,15 @@ const Navbar = () => {
               iral Nation
             </Typography>
           </IconButton>
-          <Stack direction="row" spacing={1} sx={{
-            alignItems: 'center'
-          }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: "center",
+            }}
+          >
             <LightModeRoundedIcon />
-            <Switch />
+            <Switch onClick={updateTheme} />
             <DarkModeRoundedIcon />
           </Stack>
         </Toolbar>
