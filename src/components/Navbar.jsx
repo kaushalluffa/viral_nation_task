@@ -14,10 +14,10 @@ import { useThemeUpdate } from "../context/themeContext";
 const Navbar = () => {
   const theme = useTheme();
   const updateTheme = useThemeUpdate()
-  console.log(theme);
+  // console.log(theme);
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar>
+    <Box sx={{ flexGrow: 1 }} mb={6} >
+      <AppBar position="relative" elevation={0}>
         <Toolbar
           sx={{
             justifyContent: "space-between",
