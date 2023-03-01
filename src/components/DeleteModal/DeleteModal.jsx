@@ -32,7 +32,7 @@ const DeleteModal = () => {
           color: "#000",
         }}
       >
-        Open responsive dialog
+        Open Delete modal
       </Button>
       <Dialog
         fullScreen={fullScreen}
