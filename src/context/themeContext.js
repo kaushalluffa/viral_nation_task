@@ -8,8 +8,8 @@ const lightTheme = createTheme({
     primary: {
       main: "#FCFCFD",
       dark: "#F5F5F5",
-      light: "rgba(255, 255, 255, 0.05);",
-      contrastText: "#181818"
+      light: "rgba(255, 255, 255, 0.05)",
+      contrastText: "#121212",
     },
   },
 });
@@ -18,8 +18,8 @@ const lightTheme = createTheme({
      mode: "dark",
      primary: {
        main: "#181818",
-       dark: "#1E1E1E",
-       light: "rgba(255, 255, 255, 0.05);",
+       dark: "#121212",
+       light: "rgba(255, 255, 255, 0.05)",
        contrastText: "#F5F5F5",
      },
    },

@@ -93,6 +93,7 @@ const CardView = () => {
             elevation={0}
             sx={{
               maxWidth: "342px",
+              backgroundColor: "#EEEEEE",
             }}
           >
             <CardHeader

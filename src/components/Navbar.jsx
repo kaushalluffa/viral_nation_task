@@ -17,7 +17,7 @@ const Navbar = () => {
   // console.log(theme);
   return (
     <Box sx={{ flexGrow: 1 }} mb={6} >
-      <AppBar position="relative" elevation={0}>
+      <AppBar position="relative" elevation={0} >
         <Toolbar
           sx={{
             justifyContent: "space-between",
