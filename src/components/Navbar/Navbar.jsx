@@ -14,7 +14,7 @@ import { useThemeUpdate } from "../../context/themeContext";
 const Navbar = () => {
   const theme = useTheme();
   const updateTheme = useThemeUpdate();
-  // console.log(theme);
+  console.log(theme);
   return (
     <Box sx={{ flexGrow: 1 }} mb={6}>
       <AppBar position="relative" elevation={0} color="common">
@@ -24,12 +24,23 @@ const Navbar = () => {
           }}
         >
           <IconButton>
-            <Typography variant="h4">
+            <Typography
+              variant="h4"
+              color={
+                theme.palette.mode === "light"
+                  ? theme.palette.common.black
+                  : theme.palette.common.white
+              }
+            >
               V
             </Typography>
             <Typography
               variant="body2"
-              
+              color={
+                theme.palette.mode === "light"
+                  ? theme.palette.common.black
+                  : theme.palette.common.white
+              }
             >
               iral Nation
             </Typography>
