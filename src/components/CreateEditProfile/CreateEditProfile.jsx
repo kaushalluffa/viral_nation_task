@@ -77,7 +77,7 @@ const CreateEditProfile = () => {
         >
           <Typography variant="h5">Create Profile</Typography>
           <IconButton>
-            <CloseIcon />
+            <CloseIcon onClick={handleClose}/>
           </IconButton>
         </DialogTitle>
         <Divider />
