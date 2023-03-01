@@ -5,17 +5,26 @@ import ContainerView from "./components/ContainerView/ContainerView";
 import CreateEditProfile from "./components/CreateEditProfile/CreateEditProfile";
 import DeleteModal from "./components/DeleteModal/DeleteModal";
 import Navbar from "./components/Navbar/Navbar";
+import { useThemeUpdate } from "./context/themeContext";
 
 function App() {
   const theme = useTheme()
+  const {editData} = useThemeUpdate()
   return (
-    <Box height="100vh" bgcolor={theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.common.black}>
-    <CssBaseline/>
-      <Navbar  />
-      <Container maxWidth='lg'>
-        <ContainerView/>
-        <DeleteModal/>
-        <CreateEditProfile/>
+    <Box
+      height="100vh"
+      bgcolor={
+        theme.palette.mode === "light"
+          ? theme.palette.grey[100]
+          : theme.palette.common.black
+      }
+    >
+      <CssBaseline />
+      <Navbar />
+      <Container maxWidth="lg">
+        <ContainerView />
+        <DeleteModal />
+        <CreateEditProfile editData={editData || null} />
       </Container>
     </Box>
   );

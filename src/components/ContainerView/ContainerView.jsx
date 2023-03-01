@@ -9,6 +9,8 @@ import DataGridView from "../DataGridView/DataGridView";
 import { useThemeUpdate } from "../../context/themeContext";
 const mock = [
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 1,
     name: "Ronald Richards",
@@ -20,6 +22,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 2,
     name: "Ronald Richards",
@@ -31,6 +35,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 3,
     name: "Ronald Richards",
@@ -42,6 +48,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 4,
     name: "Ronald Richards",
@@ -53,6 +61,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 5,
     name: "Ronald Richards",
@@ -64,6 +74,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 6,
     name: "Ronald Richards",
@@ -75,6 +87,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:false,
     id: 7,
     name: "Ronald Richards",
@@ -86,6 +100,8 @@ const mock = [
               vulputate et praesent nisl neque nunc tortor.`,
   },
   {
+    lastName: "Richards",
+    imageLink: "https://source.unsplash.com/random",
     is_verified:true,
     id: 8,
     name: "Ronald Richards",

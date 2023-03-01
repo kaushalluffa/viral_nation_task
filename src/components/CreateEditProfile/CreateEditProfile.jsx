@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Divider,
@@ -19,21 +19,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useThemeUpdate } from "../../context/themeContext";
 const CreateEditProfile = () => {
   // const [open, setOpen] = useState(false);
-  const { open, handleClose } = useThemeUpdate();
+  const { open, handleClose, editData } = useThemeUpdate();
   const [formValues, setFormValues] = useState({
-    imageLink: "",
-    firstName: "",
+    imageLink: editData ? editData.imageLink : "",
+    firstName: editData ? editData.name : "",
     lastName: "",
-    email: "",
-    description: "",
+    is_verified: editData ? editData.is_verified : false,
+    email: editData ? editData.email : "",
+    description: editData ? editData.description : "",
   });
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -47,10 +41,19 @@ const CreateEditProfile = () => {
     event.preventDefault();
     console.log(formValues); // Replace with your own logic for submitting the form data
   };
+  useEffect(() => {
+    setFormValues({
+      imageLink: editData ? editData.imageLink : "",
+      firstName: editData ? editData.name : "",
+      is_verified: editData ? editData.is_verified : false,
+      email: editData ? editData.email : "",
+      description: editData ? editData.description : "",
+      lastName: editData ? editData.lastName : "",
+    });
+  }, [editData]);
 
   return (
     <div>
-      
       <Dialog
         open={open}
         onClose={handleClose}
@@ -68,7 +71,9 @@ const CreateEditProfile = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h5">Create Profile</Typography>
+          <Typography variant="h5" component="p">
+            {editData ? "Edit Profile" : "Create Profile"}
+          </Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
@@ -119,7 +124,7 @@ const CreateEditProfile = () => {
             </Stack>
 
             <Box sx={{ mb: 3 }}>
-              <InputLabel htmlForm="email">
+              <InputLabel htmlFor="email">
                 <Typography sx={{ mb: 0.5 }}>Email</Typography>
               </InputLabel>
               <TextField
@@ -161,7 +166,15 @@ const CreateEditProfile = () => {
                 elevation={0}
               >
                 <Typography variant="body1">Talent is verified</Typography>
-                <Switch defaultChecked />
+                <Switch
+                  checked={formValues?.is_verified}
+                  onChange={(e) => {
+                    formValues((prevState) => ({
+                      ...prevState,
+                      is_verified: e.target.checked,
+                    }));
+                  }}
+                />
               </Paper>
             </Box>
           </Box>

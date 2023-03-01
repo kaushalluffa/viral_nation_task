@@ -9,32 +9,18 @@ import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import { Divider, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { maxWidth } from "@mui/system";
+import { useThemeUpdate } from "../../context/themeContext";
 const DeleteModal = () => {
-  const [open, setOpen] = useState(false);
+  const { openDeleteModal, handleDeleteModalClose } = useThemeUpdate();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div>
-      <Button
-        variant="outlined"
-        onClick={handleClickOpen}
-      >
-        Open Delete modal
-      </Button>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
+        open={openDeleteModal}
+        onClose={handleDeleteModalClose}
         aria-labelledby="responsive-dialog-title"
         sx={{
           "& .MuiPaper-root": {
@@ -51,17 +37,17 @@ const DeleteModal = () => {
           }}
         >
           <Typography variant="h7">Remove Profile</Typography>
-          <IconButton onClick={handleClose}>
+          <IconButton onClick={handleDeleteModalClose}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <Divider />
         <DialogContent>
           <DialogContentText>
-            <Typography variant="body2">
-              Removed profile will be deleted permanently and won't be available
-              anymore.
-            </Typography>
+            {/* <Typography variant="body2"> */}
+            Removed profile will be deleted permanently and won't be available
+            anymore.
+            {/* </Typography> */}
           </DialogContentText>
         </DialogContent>
         <Divider />
@@ -72,11 +58,41 @@ const DeleteModal = () => {
             justifyContent: "space-between",
           }}
         >
-          <Button autoFocus onClick={handleClose} variant="contained" fullWidth>
+          <Button
+            autoFocus
+            onClick={handleDeleteModalClose}
+            variant="outlined"
+            fullWidth
+            disableElevation
+            sx={{
+              bgcolor:
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[300]
+                  : theme.palette.grey[900],
+              color:
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[900]
+                  : theme.palette.common.white,
+              border: "none",
+              "&:hover": {
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[300]
+                    : theme.palette.grey[900],
+              },
+              "&:active": {
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[300]
+                    : theme.palette.grey[900],
+              },
+            }}
+          >
             Cancel
           </Button>
           <Button
-            onClick={handleClose}
+            disableElevation
+            onClick={handleDeleteModalClose}
             autoFocus
             color="error"
             variant="contained"
