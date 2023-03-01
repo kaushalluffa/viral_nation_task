@@ -7,6 +7,7 @@ import {
   IconButton,
   
   Typography,
+  useTheme,
 } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -85,6 +86,7 @@ const mock = [
   },
 ];
 const CardView = () => {
+  const theme = useTheme()
   return (
     <Grid container spacing={3}>
       {mock.map((data, i) => (
@@ -93,8 +95,9 @@ const CardView = () => {
             elevation={0}
             sx={{
               maxWidth: "342px",
-             
+             backgroundColor: theme.palette.mode === 'light' && theme.palette.grey.A200
             }}
+            variant="contained"
           >
             <CardHeader
               avatar={
@@ -110,7 +113,9 @@ const CardView = () => {
                   <MoreVertIcon />
                 </IconButton>
               }
-              title={data.name}
+              title={
+                <Typography variant="body2" display="flex" alignItems="center" gap={1}>{data.name} <VerifiedRoundedIcon/></Typography>
+              }
               subheader={
                 <Typography variant="caption">{data.email}</Typography>
               }
