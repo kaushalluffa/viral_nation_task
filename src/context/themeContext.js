@@ -15,6 +15,8 @@ export function useThemeUpdate() {
 //global wrapper for the app to use the theme context throughout the application
 export function ThemeContextProvider({ children }) {
   const [currentTheme, setCurrentTheme] = useState('light');
+  
+  const [open, setOpen] = useState(false);
  const selectedTheme = createTheme({
    palette: {
      mode: currentTheme,
@@ -26,11 +28,25 @@ export function ThemeContextProvider({ children }) {
       if(prevTheme === 'dark') return 'light'
     });
   }
+   const handleClickOpen = () => {
+     setOpen(true);
+   };
+
+   const handleClose = () => {
+     setOpen(false);
+   };
+   const value = {
+    open,
+    handleClickOpen,
+    handleClose,
+    toggleTheme,
+
+   }
   return (
     <ThemeProvider theme={selectedTheme}>
-        <ThemeUpdateContext.Provider value={toggleTheme}>
-          {children}
-        </ThemeUpdateContext.Provider>
+      <ThemeUpdateContext.Provider value={value}>
+        {children}
+      </ThemeUpdateContext.Provider>
     </ThemeProvider>
   );
 }

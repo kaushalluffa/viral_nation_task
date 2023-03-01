@@ -182,14 +182,14 @@ const rows = [
   },
 ];
 
-const DataGridView = () => {
+const DataGridView = ({fetchedData}) => {
   return (
     <Stack
       height="70vh"
       sx={{
-        "& .MuiDataGrid-root":{
-            border: 'none',
-            backgroundColor: "#fff",
+        "& .MuiDataGrid-root": {
+          border: "none",
+          backgroundColor: "#fff",
         },
 
         "& .MuiDataGrid-cell": {
@@ -215,7 +215,7 @@ const DataGridView = () => {
     >
       <Stack></Stack>
       <DataGrid
-        rows={rows}
+        rows={fetchedData}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}

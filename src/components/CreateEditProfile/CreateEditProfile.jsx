@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import {
@@ -17,8 +16,10 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useThemeUpdate } from "../../context/themeContext";
 const CreateEditProfile = () => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const { open, handleClose } = useThemeUpdate();
   const [formValues, setFormValues] = useState({
     imageLink: "",
     firstName: "",
@@ -26,13 +27,13 @@ const CreateEditProfile = () => {
     email: "",
     description: "",
   });
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -49,13 +50,7 @@ const CreateEditProfile = () => {
 
   return (
     <div>
-      <Button
-        variant="outlined"
-        onClick={handleClickOpen}
-        
-      >
-        Open Create Profile Form
-      </Button>
+      
       <Dialog
         open={open}
         onClose={handleClose}
