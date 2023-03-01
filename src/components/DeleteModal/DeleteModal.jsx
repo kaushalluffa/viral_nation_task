@@ -28,9 +28,6 @@ const DeleteModal = () => {
       <Button
         variant="outlined"
         onClick={handleClickOpen}
-        sx={{
-          color: "#000",
-        }}
       >
         Open Delete modal
       </Button>

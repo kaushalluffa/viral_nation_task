@@ -33,23 +33,19 @@ const ContainerView = () => {
           variant="outlined"
           startIcon={<PersonAddIcon />}
           sx={{
-            color: theme.palette.primary.contrastText,
+            
             marginRight: "8px",
           }}
         >
           Create Field
         </Button>
         <Button
-          sx={{
-            color: theme.palette.primary.contrastText,
-          }}
+          
         >
           <ViewWeekIcon />
         </Button>
         <Button
-          sx={{
-            color: theme.palette.primary.contrastText,
-          }}
+         
         >
           <ViewListIcon />
         </Button>

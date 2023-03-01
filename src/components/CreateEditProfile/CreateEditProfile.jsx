@@ -52,11 +52,9 @@ const CreateEditProfile = () => {
       <Button
         variant="outlined"
         onClick={handleClickOpen}
-        sx={{
-          color: "#000",
-        }}
+        
       >
-        Open Create Profile Form 
+        Open Create Profile Form
       </Button>
       <Dialog
         open={open}
@@ -76,8 +74,8 @@ const CreateEditProfile = () => {
           }}
         >
           <Typography variant="h5">Create Profile</Typography>
-          <IconButton>
-            <CloseIcon onClick={handleClose}/>
+          <IconButton onClick={handleClose}>
+            <CloseIcon />
           </IconButton>
         </DialogTitle>
         <Divider />
@@ -162,7 +160,6 @@ const CreateEditProfile = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#e6e6e6",
                   padding: 2,
                 }}
                 square
@@ -175,11 +172,13 @@ const CreateEditProfile = () => {
           </Box>
         </DialogContent>
         <Divider />
-        <DialogActions sx={{
+        <DialogActions
+          sx={{
             paddingRight: 6,
             paddingBottom: 4,
-            paddingTop: 4
-        }}>
+            paddingTop: 4,
+          }}
+        >
           <Button onClick={handleClose} variant="contained" color="error">
             Create Profile
           </Button>

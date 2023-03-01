@@ -10,26 +10,26 @@ import {
 } from "@mui/material";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
-import { useThemeUpdate } from "../context/themeContext";
+import { useThemeUpdate } from "../../context/themeContext";
 const Navbar = () => {
   const theme = useTheme();
-  const updateTheme = useThemeUpdate()
+  const updateTheme = useThemeUpdate();
   // console.log(theme);
   return (
-    <Box sx={{ flexGrow: 1 }} mb={6} >
-      <AppBar position="relative" elevation={0} >
+    <Box sx={{ flexGrow: 1 }} mb={6}>
+      <AppBar position="relative" elevation={0} color="common">
         <Toolbar
           sx={{
             justifyContent: "space-between",
           }}
         >
           <IconButton>
-            <Typography variant="h4" color={theme.palette.primary.contrastText}>
+            <Typography variant="h4">
               V
             </Typography>
             <Typography
               variant="body2"
-              color={theme.palette.primary.contrastText}
+              
             >
               iral Nation
             </Typography>
@@ -42,7 +42,9 @@ const Navbar = () => {
             }}
           >
             <LightModeRoundedIcon />
-            <Switch onClick={updateTheme} />
+            <IconButton onClick={updateTheme}>
+              <Switch />
+            </IconButton>
             <DarkModeRoundedIcon />
           </Stack>
         </Toolbar>
