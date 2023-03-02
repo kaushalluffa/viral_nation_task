@@ -3,6 +3,7 @@ import { Menu, MenuItem, IconButton, Box, useTheme } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 
 const DropdownMenu = ({ onEdit, onDelete }) => {
+  // console.log(onEdit)
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {

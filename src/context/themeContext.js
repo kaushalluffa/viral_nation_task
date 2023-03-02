@@ -13,10 +13,15 @@ export function useThemeUpdate() {
 //global wrapper for the app to use the theme context throughout the application
 export function ThemeContextProvider({ children }) {
   const [currentTheme, setCurrentTheme] = useState("light");
+ const [open, setOpen] = useState(false);
+ const handleClickOpen = () => {
+   setOpen(true);
+ };
 
-  const [open, setOpen] = useState(false);
-  const [openDeleteModal,setOpenDeleteModal] = useState(false)
-  const [editData, setEditData] = useState(null);
+ const handleClose = () => {
+   setOpen(false);
+ };
+  
   const selectedTheme = createTheme({
     palette: {
       mode: currentTheme,
@@ -29,31 +34,12 @@ export function ThemeContextProvider({ children }) {
       if (prevTheme === "dark") return "light";
     });
   }
-  const handleClickOpen = (data) => {
-    setOpen(true);
-    setEditData(data);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-    setEditData(null);
-  };
-  const handleDeleteModalOpen = (data) =>{
-    console.log(data)
-    setOpenDeleteModal(true)
-  }
-const handleDeleteModalClose = () =>{
-  setOpenDeleteModal(false);
-}
   const value = {
     open,
     handleClickOpen,
     handleClose,
     toggleTheme,
-    editData,
-    openDeleteModal,
-    handleDeleteModalOpen,
-    handleDeleteModalClose,
   };
   return (
     <ThemeProvider theme={selectedTheme}>

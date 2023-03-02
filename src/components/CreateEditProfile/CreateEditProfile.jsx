@@ -8,26 +8,35 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Divider,
+  FormControlLabel,
   IconButton,
   InputLabel,
   Paper,
   Stack,
   Switch,
   Typography,
+  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useThemeUpdate } from "../../context/themeContext";
-const CreateEditProfile = () => {
-  // const [open, setOpen] = useState(false);
-  const { open, handleClose, editData } = useThemeUpdate();
-  const [formValues, setFormValues] = useState({
-    imageLink: editData ? editData.imageLink : "",
-    firstName: editData ? editData.name : "",
+
+const CreateEditProfile = ({
+  openModal,
+  handleCloseModal,
+  handleOpenModal,
+  type,
+  currentData,
+}) => {
+  const [formValues, setFormValues] = useState(currentData ||{
+    imageLink: "",
+    firstName: "",
     lastName: "",
-    is_verified: editData ? editData.is_verified : false,
-    email: editData ? editData.email : "",
-    description: editData ? editData.description : "",
+    is_verified: true,
+    email: "",
+    description: "",
   });
+
+  const theme = useTheme();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -41,22 +50,12 @@ const CreateEditProfile = () => {
     event.preventDefault();
     console.log(formValues); // Replace with your own logic for submitting the form data
   };
-  useEffect(() => {
-    setFormValues({
-      imageLink: editData ? editData.imageLink : "",
-      firstName: editData ? editData.name : "",
-      is_verified: editData ? editData.is_verified : false,
-      email: editData ? editData.email : "",
-      description: editData ? editData.description : "",
-      lastName: editData ? editData.lastName : "",
-    });
-  }, [editData]);
 
   return (
     <div>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openModal}
+        onClose={handleCloseModal}
         fullScreen
         sx={{
           "& .MuiPaper-root": {
@@ -72,9 +71,9 @@ const CreateEditProfile = () => {
           }}
         >
           <Typography variant="h5" component="p">
-            {editData ? "Edit Profile" : "Create Profile"}
+            {type}
           </Typography>
-          <IconButton onClick={handleClose}>
+          <IconButton onClick={handleCloseModal}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -102,7 +101,7 @@ const CreateEditProfile = () => {
                 <TextField
                   name="firstName"
                   id="first-name"
-                  value={formValues.firstName}
+                  value={formValues.firstName || formValues.name}
                   onChange={handleInputChange}
                   fullWidth
                   size="small"
@@ -122,7 +121,6 @@ const CreateEditProfile = () => {
                 />
               </Box>
             </Stack>
-
             <Box sx={{ mb: 3 }}>
               <InputLabel htmlFor="email">
                 <Typography sx={{ mb: 0.5 }}>Email</Typography>
@@ -161,19 +159,26 @@ const CreateEditProfile = () => {
                   justifyContent: "space-between",
                   alignItems: "center",
                   padding: 2,
+                  bgcolor:
+                    theme.palette.mode === "light"
+                      ? theme.palette.grey[300]
+                      : theme.palette.grey[900],
                 }}
                 square
                 elevation={0}
               >
                 <Typography variant="body1">Talent is verified</Typography>
+
                 <Switch
-                  checked={formValues?.is_verified}
+                  checked={formValues.is_verified}
                   onChange={(e) => {
-                    formValues((prevState) => ({
-                      ...prevState,
+                    setFormValues((prevFormValues) => ({
+                      ...prevFormValues,
                       is_verified: e.target.checked,
                     }));
                   }}
+                  name="checked"
+                  color="primary"
                 />
               </Paper>
             </Box>
@@ -187,8 +192,16 @@ const CreateEditProfile = () => {
             paddingTop: 4,
           }}
         >
-          <Button onClick={handleClose} variant="contained" color="error">
-            Create Profile
+          <Button
+            onClick={handleCloseModal}
+            variant="contained"
+            color="primary"
+            disableElevation
+            sx={{
+              color: theme.palette.common.white,
+            }}
+          >
+            {type}
           </Button>
         </DialogActions>
       </Dialog>

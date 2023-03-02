@@ -7,11 +7,12 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import CardView from "../CardView/CardView";
 import DataGridView from "../DataGridView/DataGridView";
 import { useThemeUpdate } from "../../context/themeContext";
+import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
 const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 1,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -24,7 +25,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 2,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -37,7 +38,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 3,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -50,7 +51,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 4,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -63,7 +64,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 5,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -76,7 +77,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 6,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -89,7 +90,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:false,
+    is_verified: false,
     id: 7,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -102,7 +103,7 @@ const mock = [
   {
     lastName: "Richards",
     imageLink: "https://source.unsplash.com/random",
-    is_verified:true,
+    is_verified: true,
     id: 8,
     name: "Ronald Richards",
     email: "ronaldrichards@gmail.com",
@@ -115,10 +116,24 @@ const mock = [
 ];
 const ContainerView = () => {
   const [selectedView, setSelectedView] = useState("column");
+  
+  const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
+
+  const handleProfileModalOpen = (data) => {
+    console.log(data);
+    setOpenCreateProfileModal(true);
+  };
+  const handleProfileModalClose = (data) => {
+    console.log(data);
+    setOpenCreateProfileModal(false);
+  };
+  const handleDeleteModalClose = () => {
+    setOpenCreateProfileModal(false);
+  };
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
-  const { handleClickOpen } = useThemeUpdate();
+ 
   const theme = useTheme();
   return (
     <>
@@ -148,7 +163,7 @@ const ContainerView = () => {
             bgcolor: theme.palette.mode === "dark" && theme.palette.grey[900],
             border: theme.palette.mode === "dark" && "none",
           }}
-          onClick={handleClickOpen}
+          onClick={handleProfileModalOpen}
         >
           Create Field
         </Button>
@@ -193,6 +208,14 @@ const ContainerView = () => {
         <CardView fetchedData={mock} />
       ) : (
         <DataGridView fetchedData={mock} />
+      )}
+      {openCreateProfileModal && (
+        <CreateEditProfile
+          openModal={openCreateProfileModal}
+          handleOpenModal={openCreateProfileModal}
+          handleCloseModal={handleProfileModalClose}
+          type="Create Profile"
+        />
       )}
     </>
   );

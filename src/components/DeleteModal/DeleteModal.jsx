@@ -6,12 +6,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
 import { Divider, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useThemeUpdate } from "../../context/themeContext";
-const DeleteModal = () => {
-  const { openDeleteModal, handleDeleteModalClose } = useThemeUpdate();
+const DeleteModal = ({ openModal, handleModalClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -19,8 +16,8 @@ const DeleteModal = () => {
     <div>
       <Dialog
         fullScreen={fullScreen}
-        open={openDeleteModal}
-        onClose={handleDeleteModalClose}
+        open={openModal}
+        onClose={handleModalClose}
         aria-labelledby="responsive-dialog-title"
         sx={{
           "& .MuiPaper-root": {
@@ -37,7 +34,7 @@ const DeleteModal = () => {
           }}
         >
           <Typography variant="h7">Remove Profile</Typography>
-          <IconButton onClick={handleDeleteModalClose}>
+          <IconButton onClick={handleModalClose}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -60,7 +57,7 @@ const DeleteModal = () => {
         >
           <Button
             autoFocus
-            onClick={handleDeleteModalClose}
+            onClick={handleModalClose}
             variant="outlined"
             fullWidth
             disableElevation
@@ -92,7 +89,7 @@ const DeleteModal = () => {
           </Button>
           <Button
             disableElevation
-            onClick={handleDeleteModalClose}
+            onClick={handleModalClose}
             autoFocus
             color="error"
             variant="contained"

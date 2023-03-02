@@ -4,19 +4,36 @@ import {
   Card,
   CardHeader,
   Grid,
-  IconButton,
   Typography,
   useTheme,
 } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useThemeUpdate } from "../../context/themeContext";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
+import { useState } from "react";
+import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
 
 const CardView = ({ fetchedData }) => {
   const theme = useTheme();
-  const { open, handleClickOpen, handleDeleteModalOpen } = useThemeUpdate();
+  // const [open, setOpen] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditProfileModal, setOpenEditProfileModal] = useState(false)
+  const [currentData, setCurrentData] = useState(null)
+  function handleDeleteModalOpen(passedData) {
+    console.log(passedData);
+    setOpenDeleteModal(true);
+  }
+  function handleDeleteModalClose() {
+    setOpenDeleteModal(false);
+  }
+  function handleOpenEditProfileModal(dataToEdit) {
+    console.log("data to edit", dataToEdit);
+    setCurrentData(dataToEdit)
+    setOpenEditProfileModal(true);
+  }
+  function handleCloseEditProfileModal() {
+    setOpenEditProfileModal(false);
+  }
   return (
     <>
       <Grid container spacing={3}>
@@ -42,8 +59,12 @@ const CardView = ({ fetchedData }) => {
                 }
                 action={
                   <DropdownMenu
-                    onDelete={() =>handleDeleteModalOpen(data)}
-                    onEdit={() => handleClickOpen(data)}
+                    onDelete={() => {
+                      handleDeleteModalOpen(data);
+                    }}
+                    onEdit={() => handleOpenEditProfileModal(data)}
+                    onClose={handleDeleteModalClose}
+                    openDeleteModal={openDeleteModal}
                   />
                 }
                 title={
@@ -73,6 +94,21 @@ const CardView = ({ fetchedData }) => {
           </Grid>
         ))}
       </Grid>
+      {openEditProfileModal && (
+        <CreateEditProfile
+          openModal={openEditProfileModal}
+          handleOpenModal={handleOpenEditProfileModal}
+          handleCloseModal={handleCloseEditProfileModal}
+          type="Edit Profile"
+          currentData={currentData}
+        />
+      )}
+      {openDeleteModal && (
+        <DeleteModal
+          openModal={openDeleteModal}
+          handleModalClose={handleDeleteModalClose}
+        />
+      )}
     </>
   );
 };
