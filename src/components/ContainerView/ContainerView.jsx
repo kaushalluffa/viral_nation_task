@@ -1,13 +1,13 @@
 import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import CardView from "../CardView/CardView";
 import DataGridView from "../DataGridView/DataGridView";
-import { useThemeUpdate } from "../../context/themeContext";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
+import useMediaQuery from "@mui/material/useMediaQuery";
 const mock = [
   {
     lastName: "Richards",
@@ -116,29 +116,27 @@ const mock = [
 ];
 const ContainerView = () => {
   const [selectedView, setSelectedView] = useState("column");
-  
+  const isMobile = useMediaQuery("(min-width:600px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
 
   const handleProfileModalOpen = (data) => {
-    console.log(data);
     setOpenCreateProfileModal(true);
   };
   const handleProfileModalClose = (data) => {
     console.log(data);
     setOpenCreateProfileModal(false);
   };
-  const handleDeleteModalClose = () => {
-    setOpenCreateProfileModal(false);
-  };
+
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
- 
+
   const theme = useTheme();
+
   return (
     <>
       <Stack
-        direction="row"
+        direction={{ xs: "column", sm: "row" }}
         alignItems="center"
         marginBottom={5}
         justifyContent="space-between"
@@ -167,48 +165,52 @@ const ContainerView = () => {
         >
           Create Field
         </Button>
-        <ButtonGroup
-          disableRipple
-          sx={{
-            "& .MuiButtonGroup-groupedOutlined": {
-              borderColor: theme.palette.grey[400],
-            },
-            "& .MuiButtonGroup-groupedText": {
-              color: theme.palette.grey[200],
-            },
-          }}
-        >
-          <Button
-            variant="outlined"
-            onClick={() => toggleSelectedView("column")}
+        {isMobile && (
+          <ButtonGroup
+            disableRipple
             sx={{
-              color:
-                selectedView === "grid" ? "grey" : theme.palette.primary.light,
-              bgcolor: selectedView === "column" && theme.palette.grey[300],
+              "& .MuiButtonGroup-groupedOutlined": {
+                borderColor: theme.palette.grey[400],
+              },
+              "& .MuiButtonGroup-groupedText": {
+                color: theme.palette.grey[200],
+              },
             }}
           >
-            <ViewWeekIcon />
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => toggleSelectedView("grid")}
-            sx={{
-              color:
-                selectedView === "column"
-                  ? "grey"
-                  : theme.palette.primary.light,
-              bgcolor: selectedView === "grid" && theme.palette.grey[300],
-            }}
-          >
-            <ViewListIcon />
-          </Button>
-        </ButtonGroup>
+            <Button
+              variant="outlined"
+              onClick={() => toggleSelectedView("column")}
+              sx={{
+                color:
+                  selectedView === "grid"
+                    ? "grey"
+                    : theme.palette.primary.light,
+                bgcolor: selectedView === "column" && theme.palette.grey[300],
+              }}
+            >
+              <ViewWeekIcon />
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => toggleSelectedView("grid")}
+              sx={{
+                color:
+                  selectedView === "column"
+                    ? "grey"
+                    : theme.palette.primary.light,
+                bgcolor: selectedView === "grid" && theme.palette.grey[300],
+              }}
+            >
+              <ViewListIcon />
+            </Button>
+          </ButtonGroup>
+        )}
       </Stack>
-      {selectedView === "column" ? (
-        <CardView fetchedData={mock} />
-      ) : (
+      {selectedView === "column" && <CardView fetchedData={mock} />}
+      {isMobile && selectedView === "grid" && (
         <DataGridView fetchedData={mock} />
       )}
+
       {openCreateProfileModal && (
         <CreateEditProfile
           openModal={openCreateProfileModal}

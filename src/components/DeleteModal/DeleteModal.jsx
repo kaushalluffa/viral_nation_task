@@ -5,17 +5,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import { Divider, IconButton, Typography } from "@mui/material";
+
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material";
 const DeleteModal = ({ openModal, handleModalClose }) => {
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const theme = useTheme()
 
   return (
     <div>
       <Dialog
-        fullScreen={fullScreen}
         open={openModal}
         onClose={handleModalClose}
         aria-labelledby="responsive-dialog-title"

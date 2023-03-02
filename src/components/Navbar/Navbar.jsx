@@ -13,8 +13,8 @@ import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import { useThemeUpdate } from "../../context/themeContext";
 const Navbar = () => {
   const theme = useTheme();
-  const {toggleTheme} = useThemeUpdate();
-  // console.log(updateTheme);
+  const { toggleTheme } = useThemeUpdate();
+
   return (
     <Box sx={{ flexGrow: 1 }} mb={6}>
       <AppBar position="relative" elevation={0} color="common">

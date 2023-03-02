@@ -36,9 +36,9 @@ const CardView = ({ fetchedData }) => {
   }
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} align="center">
         {fetchedData.map((data, i) => (
-          <Grid item xs={3} key={i}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={i}>
             <Card
               elevation={0}
               sx={{
