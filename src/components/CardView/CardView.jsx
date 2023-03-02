@@ -38,7 +38,7 @@ const CardView = ({ fetchedData }) => {
     <>
       <Grid container spacing={3} align="center">
         {fetchedData.map((data, i) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}  key={i}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
             <Card
               elevation={0}
               sx={{
@@ -73,6 +73,7 @@ const CardView = ({ fetchedData }) => {
                     display="flex"
                     alignItems="center"
                     gap={1}
+                    noWrap
                   >
                     {data.name}
                     {data.is_verified && (
@@ -81,10 +82,7 @@ const CardView = ({ fetchedData }) => {
                   </Typography>
                 }
                 subheader={
-                  <Typography
-                    variant="caption"
-                  
-                  >
+                  <Typography variant="caption" noWrap>
                     {data.email}
                   </Typography>
                 }

@@ -1,215 +1,231 @@
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
-const columns = [
-  {
-    field: "name",
-    headerName: "Name",
-    width: 284,
-    editable: true,
-    // getActions: (params) => [
-    //   <GridActionsCellItem
-    //     key={0}
-    //     icon={<MoreVertIcon titleAccess={"edit"} />}
-    //     label={"edit"}
-    //     onClick={() => console.log(params)}
-    //   />,
-    // ],
-    renderHeader: (params) => {
-      return (
-        <Paper
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            // justifyContent: "space-between",
-            alignItems: "center",
-            padding: 1,
-            gap: 1,
-          }}
-          elevation={1}
-        >
-          {params.colDef.headerName}
-        </Paper>
-      );
-    },
-    renderCell: (params) => {
-      return (
-        <Paper
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            // justifyContent: "space-between",
-            alignItems: "center",
-            padding: 1,
-            gap: 1,
-          }}
-          square
-        >
-          <Avatar
-            src="https://source.unsplash.com/random"
-            aria-label="avatar"
-          ></Avatar>
-          <Typography variant="body2">{params.value}</Typography>
-        </Paper>
-      );
-    },
-  },
-  { field: "id", headerName: "ID", width: 90 },
-  {
-    field: "email",
-    headerName: "Email",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "description",
-    headerName: "Description",
-    headerAlign: "left",
-    flex: 1,
-    width: 732,
-    editable: true,
-    renderCell: (params) => {
-      return (
-        <Box height="64px" whiteSpace="pre-line">
-          {params.value}
-        </Box>
-      );
-    },
-  },
-  {
-    field: "actions",
-    headerName: "actions",
-    sortable: false,
-    width: 52,
-    //this method will return icon for the rows
-    // getActions: (params) => [
-    //   <GridActionsCellItem
-    //     key={0}
-    //     icon={<MoreVertIcon titleAccess={"edit"} />}
-    //     label={"edit"}
-    //     onClick={() => console.log(params)}
-    //   />,
-    // ],
-    renderHeader: (params) => <SettingsIcon />,
-    renderCell: (params) => {
-      return <MoreVertIcon />;
-    },
-  },
-];
-const rows = [
-  {
-    id: 1,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 2,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 3,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 4,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 5,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 6,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 7,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 8,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 9,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-  {
-    id: 10,
-    name: "kaushal",
-    email: "email@email.com",
-    description:
-      "Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet porta tincidunt massa id quam pharetra. Massa vitae feugiat vulputate et praesent nisl neque nunc tortor.",
-    actions: "actions",
-  },
-];
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
+import { useState } from "react";
 
-const DataGridView = ({fetchedData}) => {
+const DataGridView = ({ fetchedData }) => {
+  const [pageSize, setPageSize] = useState(10);
+  const theme = useTheme();
+  const [dataGridFilter, setDataGridFilter] = useState({
+    items: [
+      { columnField: "customField", operatorValue: "startsWith", value: "" },
+    ],
+  });
+
+  const [filterValue, setFilterValue] = useState("");
+
+  const handleFilterChange = (event) => {
+    const value = event.target.value;
+
+    setFilterValue(value);
+
+    const newFilterModel = {
+      items: [
+        {
+          columnField: "customField",
+          operatorValue: "startsWith",
+          value: value,
+        },
+      ],
+    };
+
+    setDataGridFilter(newFilterModel);
+  };
+  const columns = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      maxWidth: 280,
+      hideSortIcons: true,
+      disableColumnMenu: true,
+      renderHeader: (params) => {
+        return (
+          <Box
+            sx={{
+              width: "100%",
+              position: "absolute",
+              right: 0,
+              paddingLeft: 3,
+              bgcolor:
+                theme.palette.mode === "light" && theme.palette.common.white,
+            }}
+          >
+            {params.colDef.headerName}
+          </Box>
+        );
+      },
+      renderCell: (params) => {
+        return (
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            sx={{
+              bgcolor:
+                theme.palette.mode === "light" && theme.palette.common.white,
+              width: "100%",
+              height: "100%",
+              // boxShadow: 2,
+              // boxShadow: '1px 0px 0px 0px rgba(0, 0, 0, 0.16)',
+              paddingLeft: 2,
+            }}
+          >
+            <Avatar
+              src="https://source.unsplash.com/random"
+              aria-label="avatar"
+            ></Avatar>
+
+            <Typography maxWidth={100} variant="caption" noWrap>
+              {params.value}
+            </Typography>
+            <VerifiedRoundedIcon color="primary" fontSize="small" />
+          </Stack>
+        );
+      },
+    },
+    {
+      field: "id",
+      headerName: "ID",
+      minWidth: 120,
+      disableColumnMenu: true,
+      headerAlign: "center",
+      hideSortIcons: true,
+      renderHeader: () => {},
+      renderCell: (params) => {
+        return (
+          <Typography variant="body2" m={"0 auto"} noWrap>
+            {params.value}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      minWidth: 200,
+      headerAlign: "left",
+      getApplyFilterFn: (item, column) => {
+        console.log(item, column);
+      },
+      renderCell: (params) => {
+        return <Typography variant="caption">{params.value}</Typography>;
+      },
+      getValueAsString: (value) => {
+        console.log(value);
+      },
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      headerAlign: "left",
+      flex: 1,
+      width: 764,
+      editable: true,
+      disableColumnMenu: true,
+      filterable: false,
+      hideSortIcons: true,
+      renderCell: (params) => {
+        return (
+          <Box paddingBottom={0.5}>
+            <Typography variant="caption" fontSize={12}>
+              {params.value}
+            </Typography>
+            ;
+          </Box>
+        );
+      },
+      multiline: true,
+    },
+    {
+      field: "actions",
+      headerName: "actions",
+      headerAlign: "center",
+      sortable: false,
+      width: 52,
+      disableColumnMenu: true,
+      hideSortIcons: true,
+      //this method will return icon for the rows
+      getActions: (params) => [
+        <GridActionsCellItem
+          key={0}
+          icon={<MoreVertIcon titleAccess={"edit"} />}
+          label={"edit"}
+          onClick={() => console.log(params)}
+        />,
+      ],
+      renderHeader: (params) => (
+        <Box
+          sx={{
+            bgcolor: theme.palette.mode === "light" && theme.palette.grey[50],
+            width: 52,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 72,
+          }}
+        >
+          <SettingsIcon />
+        </Box>
+      ),
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              bgcolor: theme.palette.mode === "light" && theme.palette.grey[50],
+              width: 52,
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+
+              right: 0,
+            }}
+          >
+            <IconButton>
+              <MoreVertIcon />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
+  ];
   return (
     <Stack
-      height="70vh"
+      minHeight="70vh"
       sx={{
         "& .MuiDataGrid-root": {
           border: "none",
-          backgroundColor: "#fff",
+          paddingRight: 4,
+          "& .MuiDataGrid-cell": {
+            borderBottom: theme.palette.mode === "light" && "none",
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
+          "& .MuiDataGrid-columnHeader": {
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
         },
-
-        "& .MuiDataGrid-cell": {
-          borderBottom: "none",
-        },
-        "& .MuiDataGrid-columnHeaders": {
-          borderBottom: "none",
-        },
-        "& .MuiDataGrid-columnHeader": {
-          borderBottom: "none",
-          backgroundColor: "#fff",
-        },
-        "& .MuiDataGrid-footerContainer": {
-          borderTop: "none",
-        },
-        "& .MuiSvgIcon-root": {
+        "& .MuiDataGrid-columnHeader .MuiDataGrid-columnSeparator ": {
           display: "none",
         },
-        "& .custom-header": {
-          border: "none",
+        "& .MuiDataGrid-columnHeaders": {
+          borderBottom: theme.palette.mode === "light" && "none",
+        },
+        // needed to uncomment later
+        "& .MuiDataGrid-footerContainer": {
+          borderTop: "transparent",
         },
       }}
     >
@@ -217,12 +233,14 @@ const DataGridView = ({fetchedData}) => {
       <DataGrid
         rows={fetchedData}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        pageSize={pageSize}
+        rowsPerPageOptions={[2, 5, 10]}
         disableSelectionOnClick
         experimentalFeatures={{ newEditingApi: true }}
         autoHeight
-        cellClassName="custom-header"
+        rowHeight={72}
+        getRowHeight={() => "auto"}
+        onPageSizeChange={(number) => setPageSize(number)}
       />
     </Stack>
   );

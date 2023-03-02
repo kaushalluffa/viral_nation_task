@@ -21,7 +21,7 @@ function App() {
     >
       <CssBaseline />
       <Navbar />
-      <Container maxWidth="lg">
+      <Container maxWidth='xl'>
         <ContainerView />
         <DeleteModal />
         <CreateEditProfile editData={editData || null} />

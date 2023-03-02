@@ -1,12 +1,5 @@
-import {
-  Box,
-  ButtonGroup,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
@@ -122,8 +115,8 @@ const mock = [
   },
 ];
 const ContainerView = () => {
-  const [selectedView, setSelectedView] = useState("column");
-  const isMobile = useMediaQuery("(min-width:1100px");
+  const [selectedView, setSelectedView] = useState("grid");
+  const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
 
   const handleProfileModalOpen = (data) => {
@@ -143,12 +136,13 @@ const ContainerView = () => {
   return (
     <>
       <Stack
-        direction={{ xs: "column", sm: "row" }}
+        direction={{ xs: "column", lg: "row" }}
         alignItems="center"
         marginBottom={5}
         justifyContent="space-between"
+        spacing={{ xs: 2, lg: 0 }}
       >
-        <Box width="75%">
+        <Box width={{ xs: "100%", lg: "75%" }}>
           <TextField
             sx={{ flex: 1 }}
             placeholder="Search"
@@ -157,67 +151,70 @@ const ContainerView = () => {
             size="small"
           />
         </Box>
-        <Button
-          variant="outlined"
-          startIcon={<PersonAddIcon />}
-          
-          sx={{
-            color:
-              theme.palette.mode === "light"
-                ? theme.palette.primary.light
-                : theme.palette.common.white,
-            bgcolor: theme.palette.mode === "dark" && theme.palette.grey[900],
-            border: theme.palette.mode === "dark" && "none",
-          }}
-          onClick={handleProfileModalOpen}
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={0.5}
         >
-          Create Profile
-        </Button>
-        {isMobile && (
-          <ButtonGroup
-            disableRipple
+          <Button
+            variant="outlined"
+            startIcon={<PersonAddIcon />}
             sx={{
-              "& .MuiButtonGroup-groupedOutlined": {
-                borderColor: theme.palette.grey[400],
-              },
-              "& .MuiButtonGroup-groupedText": {
-                color: theme.palette.grey[200],
-              },
+              color:
+                theme.palette.mode === "light"
+                  ? theme.palette.primary.light
+                  : theme.palette.common.white,
+              bgcolor: theme.palette.mode === "dark" && theme.palette.grey[900],
+              border: theme.palette.mode === "dark" && "none",
             }}
+            onClick={handleProfileModalOpen}
           >
-            <Button
-              variant="outlined"
-              onClick={() => toggleSelectedView("column")}
+            Create Profile
+          </Button>
+          {isSmallScreen && (
+            <ButtonGroup
+              disableRipple
               sx={{
-                color:
-                  selectedView === "grid"
-                    ? "grey"
-                    : theme.palette.primary.light,
-                bgcolor: selectedView === "column" && theme.palette.grey[300],
+                "& .MuiButtonGroup-groupedOutlined": {
+                  borderColor: theme.palette.grey[400],
+                },
+                "& .MuiButtonGroup-groupedText": {
+                  color: theme.palette.grey[200],
+                },
               }}
             >
-              <ViewWeekIcon />
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => toggleSelectedView("grid")}
-              sx={{
-                color:
-                  selectedView === "column"
-                    ? "grey"
-                    : theme.palette.primary.light,
-                bgcolor: selectedView === "grid" && theme.palette.grey[300],
-              }}
-            >
-              <ViewListIcon />
-            </Button>
-          </ButtonGroup>
-        )}
+              <Button
+                variant="outlined"
+                onClick={() => toggleSelectedView("column")}
+                sx={{
+                  color: themtheme.palette.grey[400],
+                  bgcolor:
+                    selectedView === "column" && theme.palette.primary.light,
+                }}
+              >
+                <ViewWeekIcon />
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => toggleSelectedView("grid")}
+                sx={{
+                  color: theme.palette.grey[400],
+                  bgcolor:
+                    selectedView === "grid" && theme.palette.primary.light,
+                }}
+              >
+                <ViewListIcon />
+              </Button>
+            </ButtonGroup>
+          )}
+        </Box>
       </Stack>
       {selectedView === "column" && <CardView fetchedData={mock} />}
-      {isMobile && selectedView === "grid" && (
+      {isSmallScreen && selectedView === "grid" && (
         <DataGridView fetchedData={mock} />
       )}
+      {/* <Example/> */}
 
       {openCreateProfileModal && (
         <CreateEditProfile
