@@ -188,7 +188,7 @@ const ContainerView = () => {
                 variant="outlined"
                 onClick={() => toggleSelectedView("column")}
                 sx={{
-                  color: themtheme.palette.grey[400],
+                  color: theme.palette.grey[400],
                   bgcolor:
                     selectedView === "column" && theme.palette.primary.light,
                 }}
