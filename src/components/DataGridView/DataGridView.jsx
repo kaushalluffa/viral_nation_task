@@ -12,35 +12,34 @@ import {
 } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import { useState } from "react";
+import DeleteModal from "../DeleteModal/DeleteModal";
+import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
+
+import DropdownMenu from "../DropDownMenu/DropDownMenu";
 
 const DataGridView = ({ fetchedData }) => {
   const [pageSize, setPageSize] = useState(10);
   const theme = useTheme();
-  const [dataGridFilter, setDataGridFilter] = useState({
-    items: [
-      { columnField: "customField", operatorValue: "startsWith", value: "" },
-    ],
-  });
+ const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  const [filterValue, setFilterValue] = useState("");
+  const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
+  const [currentData, setCurrentData] = useState(null);
+  function handleDeleteModalOpen(passedData) {
+    console.log(passedData);
+    setOpenDeleteModal(true);
+  }
+  function handleDeleteModalClose() {
+    setOpenDeleteModal(false);
+  }
+    function handleOpenEditProfileModal(dataToEdit) {
+      console.log("data to edit", dataToEdit);
+      setCurrentData(dataToEdit);
+      setOpenEditProfileModal(true);
+    }
+    function handleCloseEditProfileModal() {
+      setOpenEditProfileModal(false);
+    }
 
-  const handleFilterChange = (event) => {
-    const value = event.target.value;
-
-    setFilterValue(value);
-
-    const newFilterModel = {
-      items: [
-        {
-          columnField: "customField",
-          operatorValue: "startsWith",
-          value: value,
-        },
-      ],
-    };
-
-    setDataGridFilter(newFilterModel);
-  };
   const columns = [
     {
       field: "name",
@@ -179,6 +178,7 @@ const DataGridView = ({ fetchedData }) => {
         </Box>
       ),
       renderCell: (params) => {
+        
         return (
           <Box
             sx={{
@@ -192,57 +192,80 @@ const DataGridView = ({ fetchedData }) => {
               right: 0,
             }}
           >
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
+            
+            <DropdownMenu
+              onDelete={() => {
+                handleDeleteModalOpen(params.row);
+              }}
+              onEdit={() => handleOpenEditProfileModal(params.row)}
+              onClose={handleDeleteModalClose}
+              openDeleteModal={openDeleteModal}
+            />
           </Box>
         );
       },
     },
   ];
   return (
-    <Stack
-      minHeight="70vh"
-      sx={{
-        "& .MuiDataGrid-root": {
-          border: "none",
-          paddingRight: 4,
-          "& .MuiDataGrid-cell": {
+    <>
+      <Stack
+        minHeight="70vh"
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+            paddingRight: 4,
+            "& .MuiDataGrid-cell": {
+              borderBottom: theme.palette.mode === "light" && "none",
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+            "& .MuiDataGrid-columnHeader": {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+          },
+          "& .MuiDataGrid-columnHeader .MuiDataGrid-columnSeparator ": {
+            display: "none",
+          },
+          "& .MuiDataGrid-columnHeaders": {
             borderBottom: theme.palette.mode === "light" && "none",
-            paddingLeft: 0,
-            paddingRight: 0,
           },
-          "& .MuiDataGrid-columnHeader": {
-            paddingLeft: 0,
-            paddingRight: 0,
+          // needed to uncomment later
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "transparent",
           },
-        },
-        "& .MuiDataGrid-columnHeader .MuiDataGrid-columnSeparator ": {
-          display: "none",
-        },
-        "& .MuiDataGrid-columnHeaders": {
-          borderBottom: theme.palette.mode === "light" && "none",
-        },
-        // needed to uncomment later
-        "& .MuiDataGrid-footerContainer": {
-          borderTop: "transparent",
-        },
-      }}
-    >
-      <Stack></Stack>
-      <DataGrid
-        rows={fetchedData}
-        columns={columns}
-        pageSize={pageSize}
-        rowsPerPageOptions={[2, 5, 10]}
-        disableSelectionOnClick
-        experimentalFeatures={{ newEditingApi: true }}
-        autoHeight
-        rowHeight={72}
-        getRowHeight={() => "auto"}
-        onPageSizeChange={(number) => setPageSize(number)}
-      />
-    </Stack>
+        }}
+      >
+        <Stack></Stack>
+        <DataGrid
+          rows={fetchedData}
+          columns={columns}
+          pageSize={pageSize}
+          rowsPerPageOptions={[2, 5, 10]}
+          disableSelectionOnClick
+          experimentalFeatures={{ newEditingApi: true }}
+          autoHeight
+          rowHeight={72}
+          getRowHeight={() => "auto"}
+          onPageSizeChange={(number) => setPageSize(number)}
+        />
+      </Stack>
+      {openEditProfileModal && (
+        <CreateEditProfile
+          openModal={openEditProfileModal}
+          handleOpenModal={handleOpenEditProfileModal}
+          handleCloseModal={handleCloseEditProfileModal}
+          type="Edit Profile"
+          currentData={currentData}
+        />
+      )}
+      {openDeleteModal && (
+        <DeleteModal
+          openModal={openDeleteModal}
+          handleModalClose={handleDeleteModalClose}
+        />
+      )}
+    </>
   );
 };
 

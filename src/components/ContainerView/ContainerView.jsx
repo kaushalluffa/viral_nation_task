@@ -214,7 +214,7 @@ const ContainerView = () => {
       {isSmallScreen && selectedView === "grid" && (
         <DataGridView fetchedData={mock} />
       )}
-      {/* <Example/> */}
+      
 
       {openCreateProfileModal && (
         <CreateEditProfile
