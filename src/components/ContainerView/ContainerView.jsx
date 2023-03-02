@@ -1,4 +1,11 @@
-import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
+import {
+  Box,
+  ButtonGroup,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -116,7 +123,7 @@ const mock = [
 ];
 const ContainerView = () => {
   const [selectedView, setSelectedView] = useState("column");
-  const isMobile = useMediaQuery("(min-width:600px");
+  const isMobile = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
 
   const handleProfileModalOpen = (data) => {
@@ -153,6 +160,7 @@ const ContainerView = () => {
         <Button
           variant="outlined"
           startIcon={<PersonAddIcon />}
+          
           sx={{
             color:
               theme.palette.mode === "light"
@@ -163,7 +171,7 @@ const ContainerView = () => {
           }}
           onClick={handleProfileModalOpen}
         >
-          Create Field
+          Create Profile
         </Button>
         {isMobile && (
           <ButtonGroup

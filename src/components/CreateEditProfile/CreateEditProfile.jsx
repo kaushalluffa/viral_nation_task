@@ -54,7 +54,7 @@ const CreateEditProfile = ({
   return (
     <div>
       <Dialog
-        open={openModal}
+        open={openModal ||false}
         onClose={handleCloseModal}
         fullScreen
         sx={{

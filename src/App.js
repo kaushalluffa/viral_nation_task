@@ -12,7 +12,7 @@ function App() {
   const {editData} = useThemeUpdate()
   return (
     <Box
-      height="100vh"
+    paddingBottom={10}
       bgcolor={
         theme.palette.mode === "light"
           ? theme.palette.grey[100]

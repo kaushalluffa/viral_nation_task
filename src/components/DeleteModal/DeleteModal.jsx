@@ -17,7 +17,7 @@ const DeleteModal = ({ openModal, handleModalClose }) => {
   return (
     <div>
       <Dialog
-        open={openModal}
+        open={openModal || false}
         onClose={handleModalClose}
         aria-labelledby="responsive-dialog-title"
         sx={{
