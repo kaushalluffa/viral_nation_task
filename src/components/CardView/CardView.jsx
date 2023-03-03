@@ -37,8 +37,8 @@ const CardView = ({ fetchedData }) => {
   return (
     <>
       <Grid container spacing={3} align="center">
-        {fetchedData.map((data, i) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
+        {fetchedData.map((data) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}>
             <Card
               elevation={0}
               sx={{
@@ -75,14 +75,14 @@ const CardView = ({ fetchedData }) => {
                     gap={1}
                     noWrap
                   >
-                    {data.name}
+                    {data.first_name} {" "} {data.last_name}
                     {data.is_verified && (
                       <VerifiedRoundedIcon color="primary" fontSize="small" />
                     )}
                   </Typography>
                 }
                 subheader={
-                  <Typography variant="caption" noWrap>
+                  <Typography variant="body2"  noWrap>
                     {data.email}
                   </Typography>
                 }

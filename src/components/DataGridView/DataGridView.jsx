@@ -75,8 +75,6 @@ const DataGridView = ({ fetchedData }) => {
                 theme.palette.mode === "light" && theme.palette.common.white,
               width: "100%",
               height: "100%",
-              // boxShadow: 2,
-              // boxShadow: '1px 0px 0px 0px rgba(0, 0, 0, 0.16)',
               paddingLeft: 2,
             }}
           >
@@ -86,7 +84,7 @@ const DataGridView = ({ fetchedData }) => {
             ></Avatar>
 
             <Typography maxWidth={100} variant="caption" noWrap>
-              {params.value}
+              {params?.row?.first_name} {" "} {params?.row?.last_name}
             </Typography>
             <VerifiedRoundedIcon color="primary" fontSize="small" />
           </Stack>
@@ -97,6 +95,7 @@ const DataGridView = ({ fetchedData }) => {
       field: "id",
       headerName: "ID",
       minWidth: 120,
+      flex: 1,
       disableColumnMenu: true,
       headerAlign: "center",
       hideSortIcons: true,
@@ -236,7 +235,6 @@ const DataGridView = ({ fetchedData }) => {
           },
         }}
       >
-        <Stack></Stack>
         <DataGrid
           rows={fetchedData}
           columns={columns}
@@ -248,6 +246,7 @@ const DataGridView = ({ fetchedData }) => {
           rowHeight={72}
           getRowHeight={() => "auto"}
           onPageSizeChange={(number) => setPageSize(number)}
+          
         />
       </Stack>
       {openEditProfileModal && (

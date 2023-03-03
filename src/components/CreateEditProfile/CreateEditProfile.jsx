@@ -28,12 +28,13 @@ const CreateEditProfile = ({
   currentData,
 }) => {
   const [formValues, setFormValues] = useState(currentData ||{
-    imageLink: "",
-    firstName: "",
-    lastName: "",
+    image_url: "",
+    first_name: "",
+    last_name: "",
     is_verified: true,
     email: "",
     description: "",
+    id:""
   });
 
   const theme = useTheme();
@@ -85,9 +86,9 @@ const CreateEditProfile = ({
                 <Typography sx={{ mb: 0.5 }}>Image Link</Typography>
               </InputLabel>
               <TextField
-                name="imageLink"
+                name="image_url"
                 id="image-link"
-                value={formValues.imageLink}
+                value={formValues.image_url}
                 onChange={handleInputChange}
                 fullWidth
                 size="small"
@@ -99,9 +100,9 @@ const CreateEditProfile = ({
                   <Typography sx={{ mb: 0.5 }}>First Name</Typography>
                 </InputLabel>
                 <TextField
-                  name="firstName"
+                  name="first_name"
                   id="first-name"
-                  value={formValues.firstName || formValues.name}
+                  value={formValues.first_name}
                   onChange={handleInputChange}
                   fullWidth
                   size="small"
@@ -112,9 +113,9 @@ const CreateEditProfile = ({
                   <Typography sx={{ mb: 0.5 }}>Last Name</Typography>
                 </InputLabel>
                 <TextField
-                  name="lastName"
+                  name="last_name"
                   id="last-name"
-                  value={formValues.lastName}
+                  value={formValues.last_name}
                   onChange={handleInputChange}
                   fullWidth
                   size="small"

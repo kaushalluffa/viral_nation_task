@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
@@ -8,117 +8,36 @@ import CardView from "../CardView/CardView";
 import DataGridView from "../DataGridView/DataGridView";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
 import useMediaQuery from "@mui/material/useMediaQuery";
-const mock = [
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 1,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 2,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 3,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 4,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 5,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 6,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: false,
-    id: 7,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-  {
-    lastName: "Richards",
-    imageLink: "https://source.unsplash.com/random",
-    is_verified: true,
-    id: 8,
-    name: "Ronald Richards",
-    email: "ronaldrichards@gmail.com",
-    description: `Lorem ipsum dolor sit amet consectetur. Tortor ut cras mauris at
-              faucibus pharetra pellentesque diam pulvinar. Mauris penatibus ut
-              luctus posuere posuere odio nisi mauris aliquet. Sapien aliquet
-              porta tincidunt massa id quam pharetra. Massa vitae feugiat
-              vulputate et praesent nisl neque nunc tortor.`,
-  },
-];
+import { useLazyQuery } from "@apollo/client";
+import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
+
 const ContainerView = () => {
-  const [selectedView, setSelectedView] = useState("grid");
+  const theme = useTheme();
+  const [selectedView, setSelectedView] = useState("column");
   const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
+  const [fetchedData, setFetchedData] = useState([]);
+  const [
+    getAllProfiles,
+    { data: getAllProfilesData, loading: getAllProfilesLoading },
+  ] = useLazyQuery(GET_ALL_PROFILES, {
+    variables: {
+      orderBy: { key: "is_verified", sort: "desc" },
+      rows: 10,
+      page: 0,
+      // searchString: "",
+    },
+  });
 
+  useEffect(() => {
+    getAllProfiles();
+    if (getAllProfilesData && !getAllProfilesLoading) {
+      setFetchedData(getAllProfilesData?.getAllProfiles?.profiles);
+    }
+  }, [getAllProfilesData]);
+  if (getAllProfilesLoading) {
+    return <h1>Loading</h1>;
+  }
   const handleProfileModalOpen = (data) => {
     setOpenCreateProfileModal(true);
   };
@@ -130,9 +49,7 @@ const ContainerView = () => {
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
-
-  const theme = useTheme();
-
+  // console.log(fetchedData);
   return (
     <>
       <Stack
@@ -210,11 +127,10 @@ const ContainerView = () => {
           )}
         </Box>
       </Stack>
-      {selectedView === "column" && <CardView fetchedData={mock} />}
+      {selectedView === "column" && <CardView fetchedData={fetchedData} />}
       {isSmallScreen && selectedView === "grid" && (
-        <DataGridView fetchedData={mock} />
+        <DataGridView fetchedData={fetchedData} />
       )}
-      
 
       {openCreateProfileModal && (
         <CreateEditProfile
