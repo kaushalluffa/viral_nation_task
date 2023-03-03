@@ -1,21 +1,26 @@
+//components imports
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import useMediaQuery from "@mui/material/useMediaQuery";
-
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+
+
+//hooks imports
 import { useTheme } from "@mui/material";
 import { useState } from "react";
 import { DELETE_PROFILE } from "../../utils/queries/deleteProfile";
 import { useMutation } from "@apollo/client";
+
+
 const DeleteModal = ({ openModal, handleModalClose, id }) => {
   const [buttonText, setButtonText] = useState("Delete");
+
   const [
     deleteProfile,
     { data: deleteResponseData, loading: deleteLoading, error: deleteError },
@@ -102,7 +107,6 @@ const DeleteModal = ({ openModal, handleModalClose, id }) => {
           <Button
             disableElevation
             onClick={() => {
-              // deleteUserHandler();
               deleteProfileHandler(id);
               if (deleteLoading) setButtonText("Deleting");
               if (deleteError) setButtonText("Try again");

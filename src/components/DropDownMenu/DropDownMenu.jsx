@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { Menu, MenuItem, IconButton, Box, useTheme } from "@mui/material";
+import { Menu, MenuItem, IconButton, Box} from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
-import { useMutation } from "@apollo/client";
-import { DELETE_PROFILE } from "../../utils/queries/deleteProfile";
 
-const DropdownMenu = ({ onEdit, onDelete, data: { id } }) => {
-  // console.log(onEdit)
+const DropdownMenu = ({ onEdit, onDelete,  }) => {
+ 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {

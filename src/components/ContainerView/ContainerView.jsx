@@ -23,7 +23,7 @@ const ContainerView = () => {
   ] = useLazyQuery(GET_ALL_PROFILES, {
     variables: {
       orderBy: { key: "is_verified", sort: "desc" },
-      rows: 10,
+      rows: 15,
       page: 0,
       // searchString: "",
     },
@@ -32,25 +32,23 @@ const ContainerView = () => {
   useEffect(() => {
     getAllProfiles();
     if (getAllProfilesData && !getAllProfilesLoading) {
-      setFetchedData(getAllProfilesData?.getAllProfiles?.profiles);
+      setFetchedData(getAllProfilesData.getAllProfiles.profiles);
     }
   }, [getAllProfilesData]);
-  if (getAllProfilesLoading) {
-    return <h1>Loading</h1>;
-  }
+
   const handleProfileModalOpen = (data) => {
     setOpenCreateProfileModal(true);
   };
   const handleProfileModalClose = () => {
-    // console.log(data);
     setOpenCreateProfileModal(false);
   };
 
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
-  
-  // console.log(fetchedData);
+  if (getAllProfilesLoading) {
+    return <h1>Loading</h1>;
+  }
   return (
     <>
       <Stack

@@ -4,8 +4,6 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Avatar,
   Box,
-  IconButton,
-  Paper,
   Stack,
   Typography,
   useTheme,
@@ -27,6 +25,7 @@ const DataGridView = ({ fetchedData }) => {
   function handleDeleteModalOpen(passedData) {
     console.log(passedData);
     setOpenDeleteModal(true);
+    setCurrentData(passedData);
   }
   function handleDeleteModalClose() {
     setOpenDeleteModal(false);
@@ -128,7 +127,7 @@ const DataGridView = ({ fetchedData }) => {
       headerName: "Description",
       headerAlign: "left",
       flex: 1,
-      width: 764,
+      // width: 764,
       editable: true,
       disableColumnMenu: true,
       filterable: false,
@@ -136,7 +135,7 @@ const DataGridView = ({ fetchedData }) => {
       renderCell: (params) => {
         return (
           <Box paddingBottom={0.5}>
-            <Typography variant="caption" fontSize={12}>
+            <Typography variant="caption" fontSize={12}  >
               {params.value}
             </Typography>
             ;
@@ -197,8 +196,9 @@ const DataGridView = ({ fetchedData }) => {
                 handleDeleteModalOpen(params.row);
               }}
               onEdit={() => handleOpenEditProfileModal(params.row)}
-              onClose={handleDeleteModalClose}
+              onClose={()=>handleDeleteModalClose(params.row)}
               openDeleteModal={openDeleteModal}
+
             />
           </Box>
         );
@@ -243,7 +243,6 @@ const DataGridView = ({ fetchedData }) => {
           disableSelectionOnClick
           experimentalFeatures={{ newEditingApi: true }}
           autoHeight
-          rowHeight={72}
           getRowHeight={() => "auto"}
           onPageSizeChange={(number) => setPageSize(number)}
           
@@ -254,7 +253,7 @@ const DataGridView = ({ fetchedData }) => {
           openModal={openEditProfileModal}
           handleOpenModal={handleOpenEditProfileModal}
           handleCloseModal={handleCloseEditProfileModal}
-          type="Edit Profile"
+          type="Edit"
           currentData={currentData}
         />
       )}
@@ -262,6 +261,7 @@ const DataGridView = ({ fetchedData }) => {
         <DeleteModal
           openModal={openDeleteModal}
           handleModalClose={handleDeleteModalClose}
+          id={currentData.id}
         />
       )}
     </>
