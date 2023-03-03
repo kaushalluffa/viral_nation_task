@@ -20,7 +20,7 @@ const CardView = ({ fetchedData }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
   const [currentData, setCurrentData] = useState(null);
-  const [deleteUser, { data, loading, error }] = useMutation(DELETE_PROFILE);
+  const [deleteUser, { data:deleteResponseData, loading:deleteLoading, error:deleteError }] = useMutation(DELETE_PROFILE);
   function handleDeleteModalOpen(dataToDelete) {
     console.log(dataToDelete);
     setCurrentData(dataToDelete);
@@ -38,10 +38,7 @@ const CardView = ({ fetchedData }) => {
   function handleCloseEditProfileModal() {
     setOpenEditProfileModal(false);
   }
-  function deleteUserHandler(passedData) {
-    console.log(passedData)
-    deleteUser({ variables: `${passedData?.id}` });
-  }
+
   return (
     <>
       <Grid container spacing={3} align="center">
@@ -73,6 +70,7 @@ const CardView = ({ fetchedData }) => {
                     onEdit={() => handleOpenEditProfileModal(data)}
                     onClose={() => handleDeleteModalClose(data)}
                     openDeleteModal={openDeleteModal}
+                    data={data}
                   />
                 }
                 title={
@@ -118,7 +116,7 @@ const CardView = ({ fetchedData }) => {
         <DeleteModal
           openModal={openDeleteModal}
           handleModalClose={handleDeleteModalClose}
-          deleteUserHandler={() =>deleteUserHandler(currentData)}
+          id={currentData.id}
         />
       )}
     </>

@@ -11,7 +11,18 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material";
-const DeleteModal = ({ openModal, handleModalClose, deleteUserHandler }) => {
+import { useState } from "react";
+import { DELETE_PROFILE } from "../../utils/queries/deleteProfile";
+import { useMutation } from "@apollo/client";
+const DeleteModal = ({ openModal, handleModalClose, id }) => {
+  const [buttonText, setButtonText] = useState("Delete");
+  const [
+    deleteProfile,
+    { data: deleteResponseData, loading: deleteLoading, error: deleteError },
+  ] = useMutation(DELETE_PROFILE);
+  function deleteProfileHandler(id) {
+    deleteProfile({ variables: { deleteProfileId: id } });
+  }
   const theme = useTheme();
 
   return (
@@ -91,7 +102,10 @@ const DeleteModal = ({ openModal, handleModalClose, deleteUserHandler }) => {
           <Button
             disableElevation
             onClick={() => {
-              deleteUserHandler();
+              // deleteUserHandler();
+              deleteProfileHandler(id);
+              if (deleteLoading) setButtonText("Deleting");
+              if (deleteError) setButtonText("Try again");
               handleModalClose();
             }}
             autoFocus
@@ -99,7 +113,7 @@ const DeleteModal = ({ openModal, handleModalClose, deleteUserHandler }) => {
             variant="contained"
             fullWidth
           >
-            Delete
+            {buttonText}
           </Button>
         </DialogActions>
       </Dialog>
