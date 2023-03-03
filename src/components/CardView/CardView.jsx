@@ -12,27 +12,35 @@ import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
 import { useState } from "react";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
-
+import { useMutation } from "@apollo/client";
+import { DELETE_PROFILE } from "../../utils/queries/deleteProfile";
 const CardView = ({ fetchedData }) => {
   const theme = useTheme();
   // const [open, setOpen] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
   const [currentData, setCurrentData] = useState(null);
-  function handleDeleteModalOpen(passedData) {
-    console.log(passedData);
+  const [deleteUser, { data, loading, error }] = useMutation(DELETE_PROFILE);
+  function handleDeleteModalOpen(dataToDelete) {
+    console.log(dataToDelete);
+    setCurrentData(dataToDelete);
     setOpenDeleteModal(true);
   }
   function handleDeleteModalClose() {
-    setOpenDeleteModal(false);
+   
+      setOpenDeleteModal(false);
+  
   }
   function handleOpenEditProfileModal(dataToEdit) {
-    console.log("data to edit", dataToEdit);
     setCurrentData(dataToEdit);
     setOpenEditProfileModal(true);
   }
   function handleCloseEditProfileModal() {
     setOpenEditProfileModal(false);
+  }
+  function deleteUserHandler(passedData) {
+    console.log(passedData)
+    deleteUser({ variables: `${passedData?.id}` });
   }
   return (
     <>
@@ -63,7 +71,7 @@ const CardView = ({ fetchedData }) => {
                       handleDeleteModalOpen(data);
                     }}
                     onEdit={() => handleOpenEditProfileModal(data)}
-                    onClose={handleDeleteModalClose}
+                    onClose={() => handleDeleteModalClose(data)}
                     openDeleteModal={openDeleteModal}
                   />
                 }
@@ -75,14 +83,14 @@ const CardView = ({ fetchedData }) => {
                     gap={1}
                     noWrap
                   >
-                    {data.first_name} {" "} {data.last_name}
+                    {data.first_name} {data.last_name}
                     {data.is_verified && (
                       <VerifiedRoundedIcon color="primary" fontSize="small" />
                     )}
                   </Typography>
                 }
                 subheader={
-                  <Typography variant="body2"  noWrap>
+                  <Typography variant="body2" noWrap>
                     {data.email}
                   </Typography>
                 }
@@ -102,7 +110,7 @@ const CardView = ({ fetchedData }) => {
           openModal={openEditProfileModal}
           handleOpenModal={handleOpenEditProfileModal}
           handleCloseModal={handleCloseEditProfileModal}
-          type="Edit Profile"
+          type="Edit"
           currentData={currentData}
         />
       )}
@@ -110,6 +118,7 @@ const CardView = ({ fetchedData }) => {
         <DeleteModal
           openModal={openDeleteModal}
           handleModalClose={handleDeleteModalClose}
+          deleteUserHandler={() =>deleteUserHandler(currentData)}
         />
       )}
     </>

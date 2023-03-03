@@ -15,19 +15,22 @@ const DropdownMenu = ({ onEdit, onDelete }) => {
   };
 
   return (
-    <Box>
-      <IconButton onClick={handleMenuOpen}>
-        <MoreVert />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={onEdit}>Edit profile</MenuItem>
-        <MenuItem onClick={onDelete}>Delete profile</MenuItem>
-      </Menu>
-    </Box>
+    <>
+      <Box>
+        <IconButton onClick={handleMenuOpen}>
+          <MoreVert />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={onEdit}>Edit profile</MenuItem>
+          <MenuItem onClick={onDelete}>Delete profile</MenuItem>
+        </Menu>
+      </Box>
+      
+    </>
   );
 };
 

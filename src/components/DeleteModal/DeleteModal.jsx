@@ -11,8 +11,8 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material";
-const DeleteModal = ({ openModal, handleModalClose }) => {
-  const theme = useTheme()
+const DeleteModal = ({ openModal, handleModalClose, deleteUserHandler }) => {
+  const theme = useTheme();
 
   return (
     <div>
@@ -90,7 +90,10 @@ const DeleteModal = ({ openModal, handleModalClose }) => {
           </Button>
           <Button
             disableElevation
-            onClick={handleModalClose}
+            onClick={() => {
+              deleteUserHandler();
+              handleModalClose();
+            }}
             autoFocus
             color="error"
             variant="contained"

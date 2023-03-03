@@ -4,11 +4,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Divider,
-  FormControlLabel,
   IconButton,
   InputLabel,
   Paper,
@@ -18,7 +17,9 @@ import {
   useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useThemeUpdate } from "../../context/themeContext";
+import { useMutation } from "@apollo/client";
+import { CREATE_PROFILE } from "../../utils/queries/createProfile";
+import { UPDATE_PROFILE } from "../../utils/queries/updateProfile";
 
 const CreateEditProfile = ({
   openModal,
@@ -27,16 +28,25 @@ const CreateEditProfile = ({
   type,
   currentData,
 }) => {
-  const [formValues, setFormValues] = useState(currentData ||{
-    image_url: "",
-    first_name: "",
-    last_name: "",
-    is_verified: true,
-    email: "",
-    description: "",
-    id:""
-  });
-
+  const [formValues, setFormValues] = useState(
+    currentData || {
+      image_url: "",
+      first_name: "",
+      last_name: "",
+      is_verified: true,
+      email: "",
+      description: "",
+      id: "",
+    }
+  );
+  const [
+    createProfileFunc,
+    { data: responseData, loading: createLoading, error: createError },
+  ] = useMutation(CREATE_PROFILE);
+  const [
+    editProfileFunc,
+    { data: editResponseData, loading: editLoading, error: editError },
+  ] = useMutation(UPDATE_PROFILE);
   const theme = useTheme();
 
   const handleInputChange = (event) => {
@@ -47,15 +57,40 @@ const CreateEditProfile = ({
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, typeOfOperation) => {
     event.preventDefault();
-    console.log(formValues); // Replace with your own logic for submitting the form data
+    const {
+      first_name,
+      last_name,
+      email,
+      id,
+      image_url,
+      description,
+      is_verified,
+    } = formValues;
+    const variables = {
+      firstName: first_name,
+      lastName: last_name,
+      description: description,
+      email: email,
+      isVerified: is_verified,
+      id: id,
+      imageUrl: image_url,
+    };
+    if (typeOfOperation.toLowerCase() === "create") {
+      createProfileFunc({
+        variables: variables,
+      });
+    }
+    if (typeOfOperation.toLowerCase() === "edit") {
+      editProfileFunc({ variables: {...variables,updateProfileId:variables.id} });
+    }
   };
 
   return (
     <div>
       <Dialog
-        open={openModal ||false}
+        open={openModal || false}
         onClose={handleCloseModal}
         fullScreen
         sx={{
@@ -72,7 +107,7 @@ const CreateEditProfile = ({
           }}
         >
           <Typography variant="h5" component="p">
-            {type}
+            {`${type} Profile`}
           </Typography>
           <IconButton onClick={handleCloseModal}>
             <CloseIcon />
@@ -194,7 +229,10 @@ const CreateEditProfile = ({
           }}
         >
           <Button
-            onClick={handleCloseModal}
+            onClick={(e) => {
+              handleSubmit(e, type);
+              handleCloseModal();
+            }}
             variant="contained"
             color="primary"
             disableElevation
@@ -202,7 +240,7 @@ const CreateEditProfile = ({
               color: theme.palette.common.white,
             }}
           >
-            {type}
+            {`${type} Profile`}
           </Button>
         </DialogActions>
       </Dialog>

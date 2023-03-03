@@ -41,14 +41,15 @@ const ContainerView = () => {
   const handleProfileModalOpen = (data) => {
     setOpenCreateProfileModal(true);
   };
-  const handleProfileModalClose = (data) => {
-    console.log(data);
+  const handleProfileModalClose = () => {
+    // console.log(data);
     setOpenCreateProfileModal(false);
   };
 
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
+  
   // console.log(fetchedData);
   return (
     <>
@@ -137,7 +138,7 @@ const ContainerView = () => {
           openModal={openCreateProfileModal}
           handleOpenModal={openCreateProfileModal}
           handleCloseModal={handleProfileModalClose}
-          type="Create Profile"
+          type="Create"
         />
       )}
     </>
