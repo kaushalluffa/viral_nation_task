@@ -8,7 +8,7 @@ import CardView from "../CardView/CardView";
 import DataGridView from "../DataGridView/DataGridView";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 
 const ContainerView = () => {
@@ -17,25 +17,38 @@ const ContainerView = () => {
   const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
   const [fetchedData, setFetchedData] = useState([]);
-  const [
-    getAllProfiles,
-    { data: getAllProfilesData, loading: getAllProfilesLoading },
-  ] = useLazyQuery(GET_ALL_PROFILES, {
-    variables: {
-      orderBy: { key: "is_verified", sort: "desc" },
-      rows: 15,
-      page: 0,
-      // searchString: "",
-    },
-  });
+  const [rows, setRows] = useState(20);
+  const { data: getAllProfilesData, loading: getAllProfilesLoading } = useQuery(
+    GET_ALL_PROFILES,
+    {
+      variables: {
+        // orderBy: { key: "is_verified", sort: "desc" },
+        rows: rows,
+        page: 0,
+        // searchString: "",
+      },
+    }
+  );
+  // const [
+  //   getAllProfiles,
+  //   { data: getAllProfilesData, loading: getAllProfilesLoading },
+  // ] = useLazyQuery(GET_ALL_PROFILES, {
+  //   variables: {
+  //     // orderBy: { key: "is_verified", sort: "desc" },
+  //     rows: rows,
+  //     page: 0,
+  //     // searchString: "",
+  //   },
+  // });
 
   useEffect(() => {
-    getAllProfiles();
-    if (getAllProfilesData && !getAllProfilesLoading) {
-      setFetchedData(getAllProfilesData.getAllProfiles.profiles);
+    // getAllProfiles();
+    if (getAllProfilesData) {
+      setFetchedData(getAllProfilesData?.getAllProfiles?.profiles);
     }
-  }, [getAllProfilesData]);
-
+  }, [ getAllProfilesData?.getAllProfiles?.profiles.length]);
+  
+console.log(getAllProfilesData?.getAllProfiles?.profiles?.length)
   const handleProfileModalOpen = (data) => {
     setOpenCreateProfileModal(true);
   };
@@ -104,9 +117,12 @@ const ContainerView = () => {
                 variant="outlined"
                 onClick={() => toggleSelectedView("column")}
                 sx={{
-                  color: theme.palette.grey[400],
+                  color:
+                    theme.palette.mode === "light" && selectedView === "column"
+                      ? theme.palette.primary.light
+                      : theme.palette.grey[400],
                   bgcolor:
-                    selectedView === "column" && theme.palette.primary.light,
+                    theme.palette.mode === "dark" && theme.palette.grey[900],
                 }}
               >
                 <ViewWeekIcon />
@@ -115,9 +131,12 @@ const ContainerView = () => {
                 variant="outlined"
                 onClick={() => toggleSelectedView("grid")}
                 sx={{
-                  color: theme.palette.grey[400],
+                  color:
+                    theme.palette.mode === "light" && selectedView === "grid"
+                      ? theme.palette.primary.light
+                      : theme.palette.grey[400],
                   bgcolor:
-                    selectedView === "grid" && theme.palette.primary.light,
+                    theme.palette.mode === "dark" && theme.palette.grey[900],
                 }}
               >
                 <ViewListIcon />

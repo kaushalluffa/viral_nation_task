@@ -1,43 +1,43 @@
+//components imports
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import {
-  Avatar,
-  Box,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import { useState } from "react";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
-
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
 
-const DataGridView = ({ fetchedData }) => {
-  const [pageSize, setPageSize] = useState(10);
-  const theme = useTheme();
- const [openDeleteModal, setOpenDeleteModal] = useState(false);
+//hooks imports
+import { useState } from "react";
 
+const DataGridView = ({ fetchedData }) => {
+  const theme = useTheme();
+  const [pageSize, setPageSize] = useState(10);
+
+  //modal state
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
+  
   const [currentData, setCurrentData] = useState(null);
+
+  //state and modal open/close handlers
   function handleDeleteModalOpen(passedData) {
-    console.log(passedData);
     setOpenDeleteModal(true);
     setCurrentData(passedData);
   }
   function handleDeleteModalClose() {
     setOpenDeleteModal(false);
   }
-    function handleOpenEditProfileModal(dataToEdit) {
-      console.log("data to edit", dataToEdit);
-      setCurrentData(dataToEdit);
-      setOpenEditProfileModal(true);
-    }
-    function handleCloseEditProfileModal() {
-      setOpenEditProfileModal(false);
-    }
+  function handleOpenEditProfileModal(dataToEdit) {
+    console.log("data to edit", dataToEdit);
+    setCurrentData(dataToEdit);
+    setOpenEditProfileModal(true);
+  }
+  function handleCloseEditProfileModal() {
+    setOpenEditProfileModal(false);
+  }
+ 
 
   const columns = [
     {
@@ -47,6 +47,7 @@ const DataGridView = ({ fetchedData }) => {
       maxWidth: 280,
       hideSortIcons: true,
       disableColumnMenu: true,
+      sortable: false,
       renderHeader: (params) => {
         return (
           <Box
@@ -83,7 +84,7 @@ const DataGridView = ({ fetchedData }) => {
             ></Avatar>
 
             <Typography maxWidth={100} variant="caption" noWrap>
-              {params?.row?.first_name} {" "} {params?.row?.last_name}
+              {params?.row?.first_name} {params?.row?.last_name}
             </Typography>
             <VerifiedRoundedIcon color="primary" fontSize="small" />
           </Stack>
@@ -98,6 +99,7 @@ const DataGridView = ({ fetchedData }) => {
       disableColumnMenu: true,
       headerAlign: "center",
       hideSortIcons: true,
+      sortable: false,
       renderHeader: () => {},
       renderCell: (params) => {
         return (
@@ -111,15 +113,10 @@ const DataGridView = ({ fetchedData }) => {
       field: "email",
       headerName: "Email",
       minWidth: 200,
+      flex: 1,
       headerAlign: "left",
-      getApplyFilterFn: (item, column) => {
-        console.log(item, column);
-      },
       renderCell: (params) => {
-        return <Typography variant="caption">{params.value}</Typography>;
-      },
-      getValueAsString: (value) => {
-        console.log(value);
+        return <Typography variant="body2">{params.value}</Typography>;
       },
     },
     {
@@ -127,7 +124,6 @@ const DataGridView = ({ fetchedData }) => {
       headerName: "Description",
       headerAlign: "left",
       flex: 1,
-      // width: 764,
       editable: true,
       disableColumnMenu: true,
       filterable: false,
@@ -135,7 +131,7 @@ const DataGridView = ({ fetchedData }) => {
       renderCell: (params) => {
         return (
           <Box paddingBottom={0.5}>
-            <Typography variant="caption" fontSize={12}  >
+            <Typography variant="caption" fontSize={12}>
               {params.value}
             </Typography>
             ;
@@ -176,7 +172,6 @@ const DataGridView = ({ fetchedData }) => {
         </Box>
       ),
       renderCell: (params) => {
-        
         return (
           <Box
             sx={{
@@ -190,15 +185,13 @@ const DataGridView = ({ fetchedData }) => {
               right: 0,
             }}
           >
-            
             <DropdownMenu
               onDelete={() => {
                 handleDeleteModalOpen(params.row);
               }}
               onEdit={() => handleOpenEditProfileModal(params.row)}
-              onClose={()=>handleDeleteModalClose(params.row)}
+              onClose={() => handleDeleteModalClose(params.row)}
               openDeleteModal={openDeleteModal}
-
             />
           </Box>
         );
@@ -245,7 +238,6 @@ const DataGridView = ({ fetchedData }) => {
           autoHeight
           getRowHeight={() => "auto"}
           onPageSizeChange={(number) => setPageSize(number)}
-          
         />
       </Stack>
       {openEditProfileModal && (

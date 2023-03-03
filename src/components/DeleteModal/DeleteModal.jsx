@@ -10,25 +10,25 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 
-
 //hooks imports
 import { useTheme } from "@mui/material";
 import { useState } from "react";
 import { DELETE_PROFILE } from "../../utils/queries/deleteProfile";
 import { useMutation } from "@apollo/client";
-
+import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 
 const DeleteModal = ({ openModal, handleModalClose, id }) => {
+  const theme = useTheme();
   const [buttonText, setButtonText] = useState("Delete");
 
-  const [
-    deleteProfile,
-    { data: deleteResponseData, loading: deleteLoading, error: deleteError },
-  ] = useMutation(DELETE_PROFILE);
+  const [deleteProfile, { loading: deleteLoading, error: deleteError }] =
+    useMutation(DELETE_PROFILE);
   function deleteProfileHandler(id) {
-    deleteProfile({ variables: { deleteProfileId: id } });
+    deleteProfile({
+      variables: { deleteProfileId: id },
+      refetchQueries: [{ query: GET_ALL_PROFILES }, "GetAllProfiles"],
+    });
   }
-  const theme = useTheme();
 
   return (
     <div>

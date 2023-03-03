@@ -12,25 +12,21 @@ import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
 import { useState } from "react";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
-import { useMutation } from "@apollo/client";
-import { DELETE_PROFILE } from "../../utils/queries/deleteProfile";
 const CardView = ({ fetchedData }) => {
   const theme = useTheme();
-  // const [open, setOpen] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
   const [currentData, setCurrentData] = useState(null);
-  const [deleteUser, { data:deleteResponseData, loading:deleteLoading, error:deleteError }] = useMutation(DELETE_PROFILE);
+
+  //state and modal open/close handlers
   function handleDeleteModalOpen(dataToDelete) {
-    console.log(dataToDelete);
     setCurrentData(dataToDelete);
     setOpenDeleteModal(true);
   }
   function handleDeleteModalClose() {
-   
-      setOpenDeleteModal(false);
-  
+    setOpenDeleteModal(false);
   }
+
   function handleOpenEditProfileModal(dataToEdit) {
     setCurrentData(dataToEdit);
     setOpenEditProfileModal(true);
@@ -80,6 +76,7 @@ const CardView = ({ fetchedData }) => {
                     alignItems="center"
                     gap={1}
                     noWrap
+                   
                   >
                     {data.first_name} {data.last_name}
                     {data.is_verified && (

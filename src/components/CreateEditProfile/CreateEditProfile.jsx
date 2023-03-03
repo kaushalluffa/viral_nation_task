@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Divider,
@@ -20,6 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useMutation } from "@apollo/client";
 import { CREATE_PROFILE } from "../../utils/queries/createProfile";
 import { UPDATE_PROFILE } from "../../utils/queries/updateProfile";
+import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 
 const CreateEditProfile = ({
   openModal,
@@ -28,6 +29,7 @@ const CreateEditProfile = ({
   type,
   currentData,
 }) => {
+  const theme = useTheme();
   const [formValues, setFormValues] = useState(
     currentData || {
       image_url: "",
@@ -42,12 +44,13 @@ const CreateEditProfile = ({
   const [
     createProfileFunc,
     { data: responseData, loading: createLoading, error: createError },
-  ] = useMutation(CREATE_PROFILE);
+  ] = useMutation(CREATE_PROFILE, {
+    refetchQueries: [{ query: GET_ALL_PROFILES }, "GetAllProfiles"],
+  });
   const [
     editProfileFunc,
     { data: editResponseData, loading: editLoading, error: editError },
   ] = useMutation(UPDATE_PROFILE);
-  const theme = useTheme();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -56,7 +59,6 @@ const CreateEditProfile = ({
       [name]: value,
     }));
   };
-
   const handleSubmit = (event, typeOfOperation) => {
     event.preventDefault();
     const {
@@ -83,7 +85,9 @@ const CreateEditProfile = ({
       });
     }
     if (typeOfOperation.toLowerCase() === "edit") {
-      editProfileFunc({ variables: {...variables,updateProfileId:variables.id} });
+      editProfileFunc({
+        variables: { ...variables, updateProfileId: variables.id },
+      });
     }
   };
 
@@ -121,12 +125,14 @@ const CreateEditProfile = ({
                 <Typography sx={{ mb: 0.5 }}>Image Link</Typography>
               </InputLabel>
               <TextField
+                // error
                 name="image_url"
                 id="image-link"
                 value={formValues.image_url}
                 onChange={handleInputChange}
                 fullWidth
                 size="small"
+                required
               />
             </Box>
             <Stack sx={{ mb: 3 }} direction="row" spacing={3}>
