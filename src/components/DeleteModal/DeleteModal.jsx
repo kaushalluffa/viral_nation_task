@@ -26,7 +26,12 @@ const DeleteModal = ({ openModal, handleModalClose, id }) => {
   function deleteProfileHandler(id) {
     deleteProfile({
       variables: { deleteProfileId: id },
-      refetchQueries: [{ query: GET_ALL_PROFILES }, "GetAllProfiles"],
+      refetchQueries: [
+        {
+          query: GET_ALL_PROFILES,
+        },
+        "GetAllProfiles",
+      ],
     });
   }
 

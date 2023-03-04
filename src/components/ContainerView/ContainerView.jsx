@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
@@ -34,7 +34,7 @@ const ContainerView = () => {
   } = useQuery(GET_ALL_PROFILES, {
     variables: {
       rows: 16,
-      page: pageNumber,
+      page: 0,
     },
   });
   const [
@@ -43,16 +43,13 @@ const ContainerView = () => {
   ] = useLazyQuery(SEARCH_PROFILE);
   useEffect(() => {
     if (getAllProfilesData) {
-      // console.log(getAllProfilesData?.getAllProfiles?.size);
       setFetchedData(getAllProfilesData?.getAllProfiles);
     }
-    if(!searchedData) return
-    if(searchedData){
-      setFetchedData(searchedData?.getAllProfiles)
+    if (!searchedData) return;
+    if (searchedData) {
+      setFetchedData(searchedData?.getAllProfiles);
     }
-  }, [getAllProfilesData?.getAllProfiles?.profiles.length,searchedData]);
-
-
+  }, [getAllProfilesData?.getAllProfiles?.profiles, searchedData]);
 
   const handleProfileModalOpen = (data) => {
     setOpenCreateProfileModal(true);
@@ -64,7 +61,6 @@ const ContainerView = () => {
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
-  console.log(searchedData)
 
   const searchForProfile = debounce((input, rows) => {
     searchProfile(
@@ -100,17 +96,23 @@ const ContainerView = () => {
         fetchMore({
           variables: {
             rows: 16,
-            page: 1,
+            page: pageNumber,
           },
           updateQuery: (prevResult, { fetchMoreResult }) => {
             if (!fetchMoreResult.getAllProfiles) return prevResult;
-
-            return Object.assign({}, prevResult, {
+            console.log("prevResult", prevResult);
+            console.log("fetchMoreResult", fetchMoreResult);
+            
+            return {
               getAllProfiles: {
-                ...prevResult.getAllProfiles,
-                ...fetchMoreResult.getAllProfiles,
+                size: prevResult?.getAllProfiles?.size,
+                profiles: [
+                  ...prevResult?.getAllProfiles?.profiles,
+                  ...fetchMoreResult?.getAllProfiles?.profiles,
+                ],
+               
               },
-            });
+            };
           },
         });
       }
@@ -118,7 +120,7 @@ const ContainerView = () => {
     window.addEventListener("scroll", () => handleScroll(pageNumber));
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pageNumber, fetchMore]);
-  
+  console.log(getAllProfilesData);
   return (
     <div>
       <Stack

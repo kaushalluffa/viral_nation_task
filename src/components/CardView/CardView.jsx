@@ -44,45 +44,7 @@ const CardView = ({
     setOpenEditProfileModal(false);
   }
 
-  //ref stuff
-  // const observer = useRef();
-  // const lastElementRef = useCallback(
-  //   (node) => {
-
-  //     if (loading) return;
-  //     if (observer && observer?.current) {
-  //       observer?.current?.disconnect();
-  //     }
-  //     observer.current = new IntersectionObserver((entries) => {
-  //       if (entries[0].isIntersecting && fetchedData?.profiles?.length < size) {
-  //         if (fetchedData?.profiles?.length === size) return;
-  //         if (fetchedData?.profiles?.length < size) {
-  //           setPageNumber((prevPageNumber) => prevPageNumber + 1);
-  //         }
-  //       }
-
-  //     });
-  //     if (node) observer.current.observe(node);
-  //   },
-  //   [loading, size]
-  // );
-
-  // const lastElementRef = useRef();
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     const firstEntry = entries[0];
-  //     if (firstEntry.isIntersecting) {
-  //       setPageNumber(prevPageNumber => prevPageNumber + 1);
-  //      handleFetchMore()
-  //     }
-  //   },{rootMargin: "100px"});
-  //   if(lastElementRef.current){
-  //     observer.observe(lastElementRef.current)
-  //   }
-  //   return () =>{
-  //     observer.unobserve(lastElementRef.current)
-  //   }
-  // }, [lastElementRef,handleFetchMore,pageNumber]);
+  
   return (
     <>
       {loading && (
@@ -107,7 +69,7 @@ const CardView = ({
               sm={6}
               md={4}
               lg={3}
-              key={data.id}
+              key={i}
               // ref={i === profiles.length - 1 ? lastElementRef : null}
             >
               <Card

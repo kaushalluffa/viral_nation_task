@@ -4,13 +4,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
+  Alert,
   Box,
+  CircularProgress,
   Divider,
   IconButton,
   InputLabel,
   Paper,
+  Snackbar,
   Stack,
   Switch,
   Typography,
@@ -21,6 +24,7 @@ import { useMutation } from "@apollo/client";
 import { CREATE_PROFILE } from "../../utils/queries/createProfile";
 import { UPDATE_PROFILE } from "../../utils/queries/updateProfile";
 import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
+import { validation } from "../../utils/queries/validation";
 
 const CreateEditProfile = ({
   openModal,
@@ -41,9 +45,10 @@ const CreateEditProfile = ({
       id: "",
     }
   );
+  const [error, setError] = useState({});
   const [
     createProfileFunc,
-    { data: responseData, loading: createLoading, error: createError },
+    { data: createResponseData, loading: createLoading, error: createError },
   ] = useMutation(CREATE_PROFILE, {
     refetchQueries: [{ query: GET_ALL_PROFILES }, "GetAllProfiles"],
   });
@@ -54,11 +59,14 @@ const CreateEditProfile = ({
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
       [name]: value,
     }));
+    setError({})
   };
+  
   const handleSubmit = (event, typeOfOperation) => {
     event.preventDefault();
     const {
@@ -70,6 +78,7 @@ const CreateEditProfile = ({
       description,
       is_verified,
     } = formValues;
+    
     const variables = {
       firstName: first_name,
       lastName: last_name,
@@ -90,8 +99,37 @@ const CreateEditProfile = ({
       });
     }
   };
+  
+  
   return (
     <div>
+      {(createLoading || editLoading) && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      {(createError || editError) && (
+        <Snackbar
+          open={!createError || editError}
+          autoHideDuration={4000}
+          
+        >
+          <Alert
+            variant="filled"
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            There is error completing your request please refresh and try again
+          </Alert>
+        </Snackbar>
+      )}
       <Dialog
         open={openModal || false}
         onClose={handleCloseModal}
@@ -124,7 +162,6 @@ const CreateEditProfile = ({
                 <Typography sx={{ mb: 0.5 }}>Image Link</Typography>
               </InputLabel>
               <TextField
-                // error
                 name="image_url"
                 id="image-link"
                 value={formValues.image_url}
@@ -146,6 +183,8 @@ const CreateEditProfile = ({
                   onChange={handleInputChange}
                   fullWidth
                   size="small"
+                  error={error.first_name && true}
+                  helperText={error.first_name && `${error.first_name}`}
                 />
               </Box>
               <Box width="100%">
@@ -159,6 +198,8 @@ const CreateEditProfile = ({
                   onChange={handleInputChange}
                   fullWidth
                   size="small"
+                  error={error.last_name && true}
+                  helperText={error.last_name && `${error.last_name}`}
                 />
               </Box>
             </Stack>
@@ -173,6 +214,8 @@ const CreateEditProfile = ({
                 onChange={handleInputChange}
                 fullWidth
                 size="small"
+                error={error.email && true}
+                helperText={error.email && `${error.email}`}
               />
             </Box>
             <Box sx={{ mb: 3 }}>
@@ -235,8 +278,12 @@ const CreateEditProfile = ({
         >
           <Button
             onClick={(e) => {
-              handleSubmit(e, type);
-              handleCloseModal();
+              const isValid = validation(formValues, setError);
+
+              if (isValid && Object.keys(error).length <= 0) {
+                handleSubmit(e, type);
+                handleCloseModal();
+              }
             }}
             variant="contained"
             color="primary"

@@ -33,12 +33,15 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   // {
   //   typePolicies:{
-  //     GetAllProfiles:{
+  //     Query:{
   //       fields:{
   //         getAllProfiles:{
   //           keyArgs: false,
   //           merge(existing = [], incoming){
-  //             return [...existing,...incoming]
+  //             console.log("existing",existing,Date.now())
+  //             console.log("incoming",incoming,Date.now())
+  //             // if(!incoming.profiles.)
+  //             return {...existing,...incoming}
   //           }
   //         }
   //       }
