@@ -18,7 +18,7 @@ const ContainerView = () => {
   const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [rows] = useState(16);
+  const [rows,setRows] = useState(16);
   const [fetchedData, setFetchedData] = useState({ size: 0, profiles: [] });
   const [pageNumber, setPageNumber] = useState(0);
 
@@ -33,8 +33,8 @@ const ContainerView = () => {
     fetchMore,
   } = useQuery(GET_ALL_PROFILES, {
     variables: {
-      rows: 16,
-      page: 0,
+      rows: rows,
+      page: pageNumber,
     },
   });
   const [
@@ -88,7 +88,12 @@ const ContainerView = () => {
   }
 
   useEffect(() => {
-    function handleScroll() {
+    function handleScroll(getAllProfilesData) {
+      if (
+        getAllProfilesData?.getAllProfiles?.profiles?.length ===
+        getAllProfilesData?.getAllProfiles?.size
+      )
+        return;
       if (
         window.innerHeight + document.documentElement.scrollTop ===
         document.documentElement.offsetHeight
@@ -96,31 +101,25 @@ const ContainerView = () => {
         fetchMore({
           variables: {
             rows: 16,
-            page: pageNumber,
+            page: 1,
           },
           updateQuery: (prevResult, { fetchMoreResult }) => {
             if (!fetchMoreResult.getAllProfiles) return prevResult;
-            console.log("prevResult", prevResult);
-            console.log("fetchMoreResult", fetchMoreResult);
-            
+
             return {
-              getAllProfiles: {
-                size: prevResult?.getAllProfiles?.size,
-                profiles: [
-                  ...prevResult?.getAllProfiles?.profiles,
-                  ...fetchMoreResult?.getAllProfiles?.profiles,
-                ],
-               
-              },
+              ...prevResult,
+              ...fetchMoreResult,
             };
           },
         });
       }
     }
-    window.addEventListener("scroll", () => handleScroll(pageNumber));
+    window.addEventListener("scroll", () => handleScroll(getAllProfilesData));
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [pageNumber, fetchMore]);
-  console.log(getAllProfilesData);
+  }, [
+    getAllProfilesData?.getAllProfiles?.profiles?.length,
+    getAllProfilesData?.getAllProfiles?.size,
+  ]);
   return (
     <div>
       <Stack
@@ -224,9 +223,7 @@ const ContainerView = () => {
       {isSmallScreen && selectedView === "grid" && (
         <DataGridView
           fetchedData={fetchedData}
-          loading={
-            (getAllProfilesLoading || searchLoading) && "Loading the Profiles"
-          }
+          loading={getAllProfilesLoading || searchLoading}
           error={
             (getAllProfilesError || searchError) &&
             "Error Loading the Profiles Please Refresh and Try Again"

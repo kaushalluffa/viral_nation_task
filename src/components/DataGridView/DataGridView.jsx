@@ -1,14 +1,8 @@
 //components imports
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridFilterInputValue } from "@mui/x-data-grid";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import {
-  Avatar,
-  Box,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
@@ -23,6 +17,7 @@ const DataGridView = ({
   error,
   page,
   handlePageNumberChange,
+  sortByEmail,
 }) => {
   const theme = useTheme();
   const [pageSize, setPageSize] = useState(5);
@@ -113,7 +108,6 @@ const DataGridView = ({
       headerAlign: "center",
       hideSortIcons: true,
       sortable: false,
-      renderHeader: () => {},
       renderCell: (params) => {
         return (
           <Typography variant="body2" m={"0 auto"} noWrap>
@@ -128,6 +122,7 @@ const DataGridView = ({
       minWidth: 200,
       flex: 1,
       headerAlign: "left",
+      
       renderCell: (params) => {
         return <Typography variant="body2">{params.value}</Typography>;
       },
@@ -251,8 +246,8 @@ const DataGridView = ({
           getRowHeight={() => "auto"}
           onPageSizeChange={(number) => setPageSize(number)}
           loading={loading}
-          page={page}
-          onPageChange={handlePageNumberChange}
+          // page={page}
+          // onPageChange={handlePageNumberChange}
         />
       </Stack>
       {openEditProfileModal && (

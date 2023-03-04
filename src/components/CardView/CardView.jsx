@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Card,
+  CardContent,
   CardHeader,
   CircularProgress,
   Grid,
@@ -13,6 +14,7 @@ import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
+import { Stack } from "@mui/system";
 const CardView = ({
   fetchedData,
   loading,
@@ -22,7 +24,7 @@ const CardView = ({
   // handleFetchMore,
 }) => {
   const theme = useTheme();
-  const {profiles} = fetchedData
+  const { profiles } = fetchedData;
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
   const [currentData, setCurrentData] = useState(null);
@@ -44,7 +46,6 @@ const CardView = ({
     setOpenEditProfileModal(false);
   }
 
-  
   return (
     <>
       {loading && (
@@ -63,15 +64,7 @@ const CardView = ({
       <Grid container spacing={3} align="center">
         {profiles.map((data, i) => {
           return (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              key={i}
-              // ref={i === profiles.length - 1 ? lastElementRef : null}
-            >
+            <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
               <Card
                 elevation={0}
                 sx={{
@@ -116,17 +109,29 @@ const CardView = ({
                     </Typography>
                   }
                   subheader={
-                    <Typography variant="body2" noWrap>
-                      {data.email}
-                    </Typography>
+                    <Box>
+                      <Typography variant="body2" noWrap>
+                        {data.email}
+                      </Typography>
+                    </Box>
                   }
                 />
 
-                <Box paddingLeft={3} paddingRight={3} paddingBottom={3}>
+                {/* <Box paddingLeft={3} paddingRight={3} paddingBottom={3}>
                   <Typography variant="body2" textAlign="left">
                     {data.description}
                   </Typography>
                 </Box>
+                 */}
+                <CardContent>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    textAlign="left"
+                  >
+                    {data.description}
+                  </Typography>
+                </CardContent>
               </Card>
             </Grid>
           );

@@ -24,12 +24,11 @@ import { useMutation } from "@apollo/client";
 import { CREATE_PROFILE } from "../../utils/queries/createProfile";
 import { UPDATE_PROFILE } from "../../utils/queries/updateProfile";
 import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
-import { validation } from "../../utils/queries/validation";
+import { validation } from "../../utils/handlers/validation";
 
 const CreateEditProfile = ({
   openModal,
   handleCloseModal,
-  handleOpenModal,
   type,
   currentData,
 }) => {
