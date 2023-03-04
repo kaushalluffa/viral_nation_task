@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
 import { ThemeContextProvider } from "./context/themeContext";
 import {
@@ -15,7 +14,7 @@ import {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const httpLink = new HttpLink({
-  uri: "https://api.poc.graphql.dev.vnplatform.com/graphql",
+  uri: process.env.REACT_APP_API_URL,
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
@@ -31,42 +30,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 const client = new ApolloClient({
   link: concat(authMiddleware, httpLink),
   cache: new InMemoryCache(),
-  // {
-  //   typePolicies:{
-  //     Query:{
-  //       fields:{
-  //         getAllProfiles:{
-  //           keyArgs: false,
-  //           merge(existing = [], incoming){
-  //             console.log("existing",existing,Date.now())
-  //             console.log("incoming",incoming,Date.now())
-  //             // if(!incoming.profiles.)
-  //             return {...existing,...incoming}
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  //   {
-  //   typePolicies: {
-  //     Query: {
-  //       fields: {
-  //         feed: {
-  //           // Don't cache separate results based on
-  //           // any of this field's arguments.
-  //           keyArgs: false,
-
-  //           // Concatenate the incoming list items with
-  //           // the existing list items.
-  //           merge(existing = [], incoming) {
-  //             return [...existing, ...incoming];
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // }
+  
 });
 
 root.render(

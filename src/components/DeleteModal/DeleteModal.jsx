@@ -63,10 +63,9 @@ const DeleteModal = ({ openModal, handleModalClose, id }) => {
         <Divider />
         <DialogContent>
           <DialogContentText>
-            {/* <Typography variant="body2"> */}
+            
             Removed profile will be deleted permanently and won't be available
             anymore.
-            {/* </Typography> */}
           </DialogContentText>
         </DialogContent>
         <Divider />

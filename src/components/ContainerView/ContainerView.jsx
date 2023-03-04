@@ -1,6 +1,12 @@
-import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
+import {
+  Box,
+  ButtonGroup,
+  Stack,
+  TextField,
+  Button,
+  useTheme,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
 import ViewListIcon from "@mui/icons-material/ViewList";
@@ -11,6 +17,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 import { SEARCH_PROFILE } from "../../utils/queries/searchProfile";
+import { debounce } from "../../utils/handlers/debounce";
+import { handleScroll } from "../../utils/handlers/handleScroll";
 
 const ContainerView = () => {
   const theme = useTheme();
@@ -18,14 +26,11 @@ const ContainerView = () => {
   const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [rows,setRows] = useState(16);
+  const [rows, setRows] = useState(16);
   const [fetchedData, setFetchedData] = useState({ size: 0, profiles: [] });
   const [pageNumber, setPageNumber] = useState(0);
 
-  function handlePageNumberChange(number) {
-    setPageNumber(number);
-  }
-
+  //fetch all profiles query
   const {
     data: getAllProfilesData,
     loading: getAllProfilesLoading,
@@ -37,10 +42,44 @@ const ContainerView = () => {
       page: pageNumber,
     },
   });
+  //search for profile query
   const [
     searchProfile,
     { data: searchedData, loading: searchLoading, error: searchError },
   ] = useLazyQuery(SEARCH_PROFILE);
+
+  //delaying the api request for search results 500ms
+    const searchForProfile = debounce((input, rows) => {
+      searchProfile(
+        {
+          variables: {
+            searchString: input,
+            rows: rows,
+          },
+        },
+        500
+      );
+    });
+
+
+    //modal open/close handlers
+  function handleProfileModalOpen(data) {
+    setOpenCreateProfileModal(true);
+  }
+  function handleProfileModalClose() {
+    setOpenCreateProfileModal(false);
+  }
+
+  function toggleSelectedView(view) {
+    setSelectedView(view);
+  }
+
+  function handleInputChange(e, rows) {
+    setInputValue(e.target.value);
+    searchForProfile(e.target.value, rows);
+  }
+
+  //setting the state with all profiles data
   useEffect(() => {
     if (getAllProfilesData) {
       setFetchedData(getAllProfilesData?.getAllProfiles);
@@ -51,70 +90,11 @@ const ContainerView = () => {
     }
   }, [getAllProfilesData?.getAllProfiles?.profiles, searchedData]);
 
-  const handleProfileModalOpen = (data) => {
-    setOpenCreateProfileModal(true);
-  };
-  const handleProfileModalClose = () => {
-    setOpenCreateProfileModal(false);
-  };
-
-  function toggleSelectedView(view) {
-    setSelectedView(view);
-  }
-
-  const searchForProfile = debounce((input, rows) => {
-    searchProfile(
-      {
-        variables: {
-          searchString: input,
-          rows: rows,
-        },
-      },
-      500
-    );
-  });
-  function handleInputChange(e, rows) {
-    setInputValue(e.target.value);
-    searchForProfile(e.target.value, rows);
-  }
-  function debounce(cb, delay = 500) {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        cb(...args);
-      }, delay);
-    };
-  }
-
+  //setting the state on scroll
   useEffect(() => {
-    function handleScroll(getAllProfilesData) {
-      if (
-        getAllProfilesData?.getAllProfiles?.profiles?.length ===
-        getAllProfilesData?.getAllProfiles?.size
-      )
-        return;
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight
-      ) {
-        fetchMore({
-          variables: {
-            rows: 16,
-            page: 1,
-          },
-          updateQuery: (prevResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult.getAllProfiles) return prevResult;
-
-            return {
-              ...prevResult,
-              ...fetchMoreResult,
-            };
-          },
-        });
-      }
-    }
-    window.addEventListener("scroll", () => handleScroll(getAllProfilesData));
+    window.addEventListener("scroll", () =>
+      handleScroll(getAllProfilesData, fetchMore)
+    );
     return () => window.removeEventListener("scroll", handleScroll);
   }, [
     getAllProfilesData?.getAllProfiles?.profiles?.length,
@@ -228,8 +208,6 @@ const ContainerView = () => {
             (getAllProfilesError || searchError) &&
             "Error Loading the Profiles Please Refresh and Try Again"
           }
-          page={pageNumber}
-          handlePageNumberChange={handlePageNumberChange}
         />
       )}
 

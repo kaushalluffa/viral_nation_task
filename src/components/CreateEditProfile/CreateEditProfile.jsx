@@ -1,11 +1,11 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import {  useState } from "react";
+import { useState } from "react";
 import {
+  Button,
+  TextField,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Dialog,
   Alert,
   Box,
   CircularProgress,
@@ -45,16 +45,12 @@ const CreateEditProfile = ({
     }
   );
   const [error, setError] = useState({});
-  const [
-    createProfileFunc,
-    { data: createResponseData, loading: createLoading, error: createError },
-  ] = useMutation(CREATE_PROFILE, {
-    refetchQueries: [{ query: GET_ALL_PROFILES }, "GetAllProfiles"],
-  });
-  const [
-    editProfileFunc,
-    { data: editResponseData, loading: editLoading, error: editError },
-  ] = useMutation(UPDATE_PROFILE);
+  const [createProfileFunc, { loading: createLoading, error: createError }] =
+    useMutation(CREATE_PROFILE, {
+      refetchQueries: [{ query: GET_ALL_PROFILES }, "GetAllProfiles"],
+    });
+  const [editProfileFunc, { loading: editLoading, error: editError }] =
+    useMutation(UPDATE_PROFILE);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -63,9 +59,9 @@ const CreateEditProfile = ({
       ...prevFormValues,
       [name]: value,
     }));
-    setError({})
+    setError({});
   };
-  
+
   const handleSubmit = (event, typeOfOperation) => {
     event.preventDefault();
     const {
@@ -77,7 +73,7 @@ const CreateEditProfile = ({
       description,
       is_verified,
     } = formValues;
-    
+
     const variables = {
       firstName: first_name,
       lastName: last_name,
@@ -98,8 +94,7 @@ const CreateEditProfile = ({
       });
     }
   };
-  
-  
+
   return (
     <div>
       {(createLoading || editLoading) && (
@@ -115,16 +110,8 @@ const CreateEditProfile = ({
         </Box>
       )}
       {(createError || editError) && (
-        <Snackbar
-          open={!createError || editError}
-          autoHideDuration={4000}
-          
-        >
-          <Alert
-            variant="filled"
-            severity="error"
-            sx={{ width: "100%" }}
-          >
+        <Snackbar open={!createError || editError} autoHideDuration={4000}>
+          <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
             There is error completing your request please refresh and try again
           </Alert>
         </Snackbar>

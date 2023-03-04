@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Menu, MenuItem, IconButton, Box} from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import MoreVert from "@mui/icons-material/MoreVert";
 
-const DropdownMenu = ({ onEdit, onDelete,  }) => {
- 
+const DropdownMenu = ({ onEdit, onDelete }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {

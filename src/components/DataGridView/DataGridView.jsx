@@ -1,5 +1,5 @@
 //components imports
-import { DataGrid, GridActionsCellItem, GridFilterInputValue } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
@@ -15,9 +15,7 @@ const DataGridView = ({
   fetchedData,
   loading,
   error,
-  page,
-  handlePageNumberChange,
-  sortByEmail,
+ 
 }) => {
   const theme = useTheme();
   const [pageSize, setPageSize] = useState(5);
@@ -37,7 +35,6 @@ const DataGridView = ({
     setOpenDeleteModal(false);
   }
   function handleOpenEditProfileModal(dataToEdit) {
-    console.log("data to edit", dataToEdit);
     setCurrentData(dataToEdit);
     setOpenEditProfileModal(true);
   }
@@ -156,7 +153,6 @@ const DataGridView = ({
       width: 52,
       disableColumnMenu: true,
       hideSortIcons: true,
-      //this method will return icon for the rows
       getActions: (params) => [
         <GridActionsCellItem
           key={0}
@@ -246,8 +242,7 @@ const DataGridView = ({
           getRowHeight={() => "auto"}
           onPageSizeChange={(number) => setPageSize(number)}
           loading={loading}
-          // page={page}
-          // onPageChange={handlePageNumberChange}
+          
         />
       </Stack>
       {openEditProfileModal && (
