@@ -90,7 +90,6 @@ const CreateEditProfile = ({
       });
     }
   };
-
   return (
     <div>
       <Dialog

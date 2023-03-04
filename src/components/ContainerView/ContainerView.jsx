@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Stack, TextField, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
@@ -10,45 +10,50 @@ import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
+import { SEARCH_PROFILE } from "../../utils/queries/searchProfile";
 
 const ContainerView = () => {
   const theme = useTheme();
   const [selectedView, setSelectedView] = useState("column");
   const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
-  const [fetchedData, setFetchedData] = useState([]);
-  const [rows, setRows] = useState(20);
-  const { data: getAllProfilesData, loading: getAllProfilesLoading } = useQuery(
-    GET_ALL_PROFILES,
-    {
-      variables: {
-        // orderBy: { key: "is_verified", sort: "desc" },
-        rows: rows,
-        page: 0,
-        // searchString: "",
-      },
-    }
-  );
-  // const [
-  //   getAllProfiles,
-  //   { data: getAllProfilesData, loading: getAllProfilesLoading },
-  // ] = useLazyQuery(GET_ALL_PROFILES, {
-  //   variables: {
-  //     // orderBy: { key: "is_verified", sort: "desc" },
-  //     rows: rows,
-  //     page: 0,
-  //     // searchString: "",
-  //   },
-  // });
+  const [inputValue, setInputValue] = useState("");
+  const [rows] = useState(16);
+  const [fetchedData, setFetchedData] = useState({ size: 0, profiles: [] });
+  const [pageNumber, setPageNumber] = useState(0);
 
+  function handlePageNumberChange(number) {
+    setPageNumber(number);
+  }
+
+  const {
+    data: getAllProfilesData,
+    loading: getAllProfilesLoading,
+    error: getAllProfilesError,
+    fetchMore,
+  } = useQuery(GET_ALL_PROFILES, {
+    variables: {
+      rows: 16,
+      page: pageNumber,
+    },
+  });
+  const [
+    searchProfile,
+    { data: searchedData, loading: searchLoading, error: searchError },
+  ] = useLazyQuery(SEARCH_PROFILE);
   useEffect(() => {
-    // getAllProfiles();
     if (getAllProfilesData) {
-      setFetchedData(getAllProfilesData?.getAllProfiles?.profiles);
+      // console.log(getAllProfilesData?.getAllProfiles?.size);
+      setFetchedData(getAllProfilesData?.getAllProfiles);
     }
-  }, [ getAllProfilesData?.getAllProfiles?.profiles.length]);
-  
-console.log(getAllProfilesData?.getAllProfiles?.profiles?.length)
+    if(!searchedData) return
+    if(searchedData){
+      setFetchedData(searchedData?.getAllProfiles)
+    }
+  }, [getAllProfilesData?.getAllProfiles?.profiles.length,searchedData]);
+
+
+
   const handleProfileModalOpen = (data) => {
     setOpenCreateProfileModal(true);
   };
@@ -59,11 +64,63 @@ console.log(getAllProfilesData?.getAllProfiles?.profiles?.length)
   function toggleSelectedView(view) {
     setSelectedView(view);
   }
-  if (getAllProfilesLoading) {
-    return <h1>Loading</h1>;
+  console.log(searchedData)
+
+  const searchForProfile = debounce((input, rows) => {
+    searchProfile(
+      {
+        variables: {
+          searchString: input,
+          rows: rows,
+        },
+      },
+      500
+    );
+  });
+  function handleInputChange(e, rows) {
+    setInputValue(e.target.value);
+    searchForProfile(e.target.value, rows);
   }
+  function debounce(cb, delay = 500) {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        cb(...args);
+      }, delay);
+    };
+  }
+
+  useEffect(() => {
+    function handleScroll() {
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.documentElement.offsetHeight
+      ) {
+        fetchMore({
+          variables: {
+            rows: 16,
+            page: 1,
+          },
+          updateQuery: (prevResult, { fetchMoreResult }) => {
+            if (!fetchMoreResult.getAllProfiles) return prevResult;
+
+            return Object.assign({}, prevResult, {
+              getAllProfiles: {
+                ...prevResult.getAllProfiles,
+                ...fetchMoreResult.getAllProfiles,
+              },
+            });
+          },
+        });
+      }
+    }
+    window.addEventListener("scroll", () => handleScroll(pageNumber));
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [pageNumber, fetchMore]);
+  
   return (
-    <>
+    <div>
       <Stack
         direction={{ xs: "column", lg: "row" }}
         alignItems="center"
@@ -78,6 +135,8 @@ console.log(getAllProfilesData?.getAllProfiles?.profiles?.length)
             inputProps={{ "aria-label": "search" }}
             fullWidth
             size="small"
+            value={inputValue}
+            onChange={(e) => handleInputChange(e, rows)}
           />
         </Box>
         <Box
@@ -145,9 +204,34 @@ console.log(getAllProfilesData?.getAllProfiles?.profiles?.length)
           )}
         </Box>
       </Stack>
-      {selectedView === "column" && <CardView fetchedData={fetchedData} />}
+      {selectedView === "column" && (
+        <CardView
+          fetchedData={fetchedData}
+          loading={
+            (getAllProfilesLoading || searchLoading) && "Loading the Profiles"
+          }
+          error={
+            (getAllProfilesError || searchError) &&
+            "Error Loading the Profiles Please Refresh and Try Again"
+          }
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          // handleFetchMore={handleFetchMore}
+        />
+      )}
       {isSmallScreen && selectedView === "grid" && (
-        <DataGridView fetchedData={fetchedData} />
+        <DataGridView
+          fetchedData={fetchedData}
+          loading={
+            (getAllProfilesLoading || searchLoading) && "Loading the Profiles"
+          }
+          error={
+            (getAllProfilesError || searchError) &&
+            "Error Loading the Profiles Please Refresh and Try Again"
+          }
+          page={pageNumber}
+          handlePageNumberChange={handlePageNumberChange}
+        />
       )}
 
       {openCreateProfileModal && (
@@ -158,7 +242,7 @@ console.log(getAllProfilesData?.getAllProfiles?.profiles?.length)
           type="Create"
         />
       )}
-    </>
+    </div>
   );
 };
 

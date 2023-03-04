@@ -2,7 +2,13 @@
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
@@ -11,14 +17,20 @@ import DropdownMenu from "../DropDownMenu/DropDownMenu";
 //hooks imports
 import { useState } from "react";
 
-const DataGridView = ({ fetchedData }) => {
+const DataGridView = ({
+  fetchedData,
+  loading,
+  error,
+  page,
+  handlePageNumberChange,
+}) => {
   const theme = useTheme();
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
 
   //modal state
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
-  
+
   const [currentData, setCurrentData] = useState(null);
 
   //state and modal open/close handlers
@@ -37,7 +49,6 @@ const DataGridView = ({ fetchedData }) => {
   function handleCloseEditProfileModal() {
     setOpenEditProfileModal(false);
   }
- 
 
   const columns = [
     {
@@ -86,7 +97,9 @@ const DataGridView = ({ fetchedData }) => {
             <Typography maxWidth={100} variant="caption" noWrap>
               {params?.row?.first_name} {params?.row?.last_name}
             </Typography>
-            <VerifiedRoundedIcon color="primary" fontSize="small" />
+            {params?.row?.is_verified && (
+              <VerifiedRoundedIcon color="primary" fontSize="small" />
+            )}
           </Stack>
         );
       },
@@ -222,14 +235,13 @@ const DataGridView = ({ fetchedData }) => {
           "& .MuiDataGrid-columnHeaders": {
             borderBottom: theme.palette.mode === "light" && "none",
           },
-          // needed to uncomment later
           "& .MuiDataGrid-footerContainer": {
             borderTop: "transparent",
           },
         }}
       >
         <DataGrid
-          rows={fetchedData}
+          rows={fetchedData?.profiles}
           columns={columns}
           pageSize={pageSize}
           rowsPerPageOptions={[2, 5, 10]}
@@ -238,6 +250,9 @@ const DataGridView = ({ fetchedData }) => {
           autoHeight
           getRowHeight={() => "auto"}
           onPageSizeChange={(number) => setPageSize(number)}
+          loading={loading}
+          page={page}
+          onPageChange={handlePageNumberChange}
         />
       </Stack>
       {openEditProfileModal && (
