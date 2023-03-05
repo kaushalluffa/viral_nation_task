@@ -1,9 +1,4 @@
-export function handleScroll({
-  fetchMore,
-  setFetchedData,
-  
-}) {
-  
+export function handleScroll({ fetchMore, setFetchedData }) {
   if (
     window.innerHeight + document.documentElement.scrollTop ===
     document.documentElement.offsetHeight
@@ -17,7 +12,7 @@ export function handleScroll({
         },
       }).then(({ data }) => {
         if (data?.getAllProfiles?.profiles?.length <= 0) {
-          setFetchedData((prevData) => prevData);
+          return;
         } else {
           setFetchedData((prevData) => {
             return {

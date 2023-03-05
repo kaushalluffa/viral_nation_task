@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 
 
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import { useTheme } from "@mui/material";
+import  useTheme  from "@mui/material/styles/useTheme";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
 
 export default function CardComponent({
@@ -81,6 +81,7 @@ export default function CardComponent({
       <CardContent
         sx={{
           paddingTop: 0,
+          textAlign: 'left'
         }}
       >
         <Typography variant="body2" color="text">
