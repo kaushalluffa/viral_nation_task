@@ -41,6 +41,11 @@ const ContainerView = () => {
       rows: rows,
       page: pageNumber,
     },
+    onCompleted: (data) => {
+      console.log("query", data);
+      const { size, profiles } = data.getAllProfiles;
+      setFetchedData({ size: size, profiles: profiles });
+    },
   });
   //search for profile query
   const [
@@ -49,20 +54,19 @@ const ContainerView = () => {
   ] = useLazyQuery(SEARCH_PROFILE);
 
   //delaying the api request for search results 500ms
-    const searchForProfile = debounce((input, rows) => {
-      searchProfile(
-        {
-          variables: {
-            searchString: input,
-            rows: rows,
-          },
+  const searchForProfile = debounce((input, rows) => {
+    searchProfile(
+      {
+        variables: {
+          searchString: input,
+          rows: rows,
         },
-        500
-      );
-    });
+      },
+      500
+    );
+  });
 
-
-    //modal open/close handlers
+  //modal open/close handlers
   function handleProfileModalOpen(data) {
     setOpenCreateProfileModal(true);
   }
@@ -92,13 +96,20 @@ const ContainerView = () => {
 
   //setting the state on scroll
   useEffect(() => {
-    window.addEventListener("scroll", () =>
-      handleScroll(getAllProfilesData, fetchMore)
-    );
+    if (fetchedData.profiles.length === fetchedData.size) {
+      return;
+    } else {
+      window.addEventListener("scroll", () => {
+        if (!(fetchedData?.profiles?.length === fetchedData?.size))
+          handleScroll(fetchMore, setFetchedData);
+      });
+    }
     return () => window.removeEventListener("scroll", handleScroll);
   }, [
-    getAllProfilesData?.getAllProfiles?.profiles?.length,
-    getAllProfilesData?.getAllProfiles?.size,
+    fetchedData?.profiles?.length,
+    fetchedData?.size,
+    fetchMore,
+    fetchedData,
   ]);
   return (
     <div>
