@@ -1,17 +1,15 @@
-import {  useLazyQuery } from "@apollo/client";
-import { Box, Button, Container, CssBaseline, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
-
-import "./App.css";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import useTheme from "@mui/material/styles/useTheme";
 import ContainerView from "./components/ContainerView/ContainerView";
-import CreateEditProfile from "./components/CreateEditProfile/CreateEditProfile";
-import DeleteModal from "./components/DeleteModal/DeleteModal";
 import Navbar from "./components/Navbar/Navbar";
-import { useThemeUpdate } from "./context/themeContext";
+
+
+
 function App() {
   const theme = useTheme();
-  const { editData } = useThemeUpdate();
- 
+
   return (
     <Box
       paddingBottom={10}
@@ -23,11 +21,8 @@ function App() {
     >
       <CssBaseline />
       <Navbar />
-      {/* <Button onClick={getAllProfiles}>Click</Button> */}
       <Container maxWidth="xl">
         <ContainerView />
-        <DeleteModal />
-        <CreateEditProfile editData={editData || null} />
       </Container>
     </Box>
   );

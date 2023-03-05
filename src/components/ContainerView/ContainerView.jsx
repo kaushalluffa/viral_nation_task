@@ -4,7 +4,7 @@ import CardView from "../CardView/CardView";
 import DataGridView from "../DataGridView/DataGridView";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 import { SEARCH_PROFILE } from "../../utils/queries/searchProfile";
 import { debounce } from "../../utils/handlers/debounce";
@@ -21,11 +21,15 @@ const ContainerView = () => {
   const [pageNumber, setPageNumber] = useState(0);
 
   //fetch all profiles query
-  const {
-    loading: getAllProfilesLoading,
-    error: getAllProfilesError,
-    fetchMore,
-  } = useQuery(GET_ALL_PROFILES, {
+  const [
+    getAllProfilesFn,
+    {
+      data: getAllProfilesData,
+      loading: getAllProfilesLoading,
+      error: getAllProfilesError,
+      fetchMore,
+    },
+  ] = useLazyQuery(GET_ALL_PROFILES, {
     variables: {
       orderBy: {
         key: "is_verified",
@@ -33,10 +37,6 @@ const ContainerView = () => {
       },
       rows: rows,
       page: pageNumber,
-    },
-    onCompleted: (data) => {
-      const { size, profiles } = data.getAllProfiles;
-      setFetchedData({ size: size, profiles: profiles });
     },
   });
   //search for profile query
@@ -75,6 +75,13 @@ const ContainerView = () => {
     searchForProfile(e.target.value, rows);
   }
 
+  useEffect(() => {
+    if (getAllProfilesData) {
+      setFetchedData(getAllProfilesData.getAllProfiles);
+    }
+
+    getAllProfilesFn();
+  }, [getAllProfilesData, getAllProfilesFn]);
   //setting the state with all profiles data
   useEffect(() => {
     if (!searchedData) return;
@@ -85,18 +92,19 @@ const ContainerView = () => {
 
   //setting the state on scroll
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      handleScroll({
-        fetchMore,
-        fetchedData,
-        pageNumber,
-        setPageNumber,
-        setFetchedData,
+    if (fetchedData?.profiles.length > 0) {
+      window.addEventListener("scroll", () => {
+        handleScroll({
+          fetchMore,
+          fetchedData,
+
+          setFetchedData,
+        });
       });
-    });
+    }
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [fetchedData?.profiles?.length, fetchedData?.size]);
+  }, [fetchMore, fetchedData]);
 
   return (
     <>
