@@ -235,7 +235,7 @@ const DataGridView = ({
           rows={fetchedData?.profiles}
           columns={columns}
           pageSize={pageSize}
-          rowsPerPageOptions={[2, 5, 10]}
+          rowsPerPageOptions={[ 5, 10]}
           disableSelectionOnClick
           experimentalFeatures={{ newEditingApi: true }}
           autoHeight

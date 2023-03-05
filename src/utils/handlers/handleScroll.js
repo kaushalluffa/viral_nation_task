@@ -1,6 +1,9 @@
-export function handleScroll( fetchMore, setFetchedData) {
-  //as you see i tried comparing the length and size property to stop the execution which didn't stop it if had hasMore prop returning from backend i could use it to stop the execution
- 
+export function handleScroll({
+  fetchMore,
+  setFetchedData,
+  
+}) {
+  
   if (
     window.innerHeight + document.documentElement.scrollTop ===
     document.documentElement.offsetHeight
@@ -13,20 +16,24 @@ export function handleScroll( fetchMore, setFetchedData) {
           page: 1,
         },
       }).then(({ data }) => {
-        setFetchedData((prevData) => {
-          return {
-            size: prevData.size,
-            profiles: [
-              ...new Set([
-                ...prevData.profiles,
-                ...data.getAllProfiles.profiles,
-              ]),
-            ],
-          };
-        });
+        if (data?.getAllProfiles?.profiles?.length <= 0) {
+          setFetchedData((prevData) => prevData);
+        } else {
+          setFetchedData((prevData) => {
+            return {
+              size: prevData.size,
+              profiles: [
+                ...new Set([
+                  ...prevData.profiles,
+                  ...data.getAllProfiles.profiles,
+                ]),
+              ],
+            };
+          });
+        }
       });
 
-      //one more version to update the fetched data
+      //one more version to update the fetched data but i couldn't achieve what i needed so i have if only for reference that i am aware of this method
       // fetchMore({
       //   variables: {
       //     rows: 16,
@@ -41,6 +48,6 @@ export function handleScroll( fetchMore, setFetchedData) {
       //     };
       //   },
       // });
-    }, 500);
+    }, 300);
   }
 }
