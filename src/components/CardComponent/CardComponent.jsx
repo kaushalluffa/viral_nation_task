@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import useTheme from "@mui/material/styles/useTheme";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
-import { forwardRef, useEffect } from "react";
+import {  useEffect } from "react";
 
 const CardComponent = ({
   data,
@@ -22,6 +22,7 @@ const CardComponent = ({
   scrollRef,
 }) => {
   const theme = useTheme();
+  
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {

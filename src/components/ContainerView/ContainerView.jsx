@@ -9,25 +9,26 @@ import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 import { SEARCH_PROFILE } from "../../utils/queries/searchProfile";
 import { debounce } from "../../utils/handlers/debounce";
 import SearchBarContainer from "../SearchBarContainer/SearchBarContainer";
+import MyComponent from "../DataGridView/testgrid";
 
 const ContainerView = () => {
-  const [selectedView, setSelectedView] = useState("column");
-  const isSmallScreen = useMediaQuery("(min-width:1100px");
-  const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  
-  const [isVisible, setIsVisible] = useState(false);
-  const scrollRef = useRef(null);
-
-  const pageNumberRef = useRef(0);
-
-  //fetch all profiles query
   const [fetchedData, setFetchedData] = useState({
     profiles: [],
     size: 0,
     page: 0,
     pageSize: 16,
   });
+  const [selectedView, setSelectedView] = useState("grid");
+  const isSmallScreen = useMediaQuery("(min-width:1100px");
+  const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
+  const [isVisible, setIsVisible] = useState(false);
+  const scrollRef = useRef(null);
+
+  const pageNumberRef = useRef(0);
+
+  //fetch all profiles query
   const [
     getAllProfiles,
     {
@@ -37,7 +38,6 @@ const ContainerView = () => {
       fetchMore,
     },
   ] = useLazyQuery(GET_ALL_PROFILES);
-
 
   //search for profile query
   const [
@@ -53,6 +53,10 @@ const ContainerView = () => {
           variables: {
             searchString: input,
             rows: fetchedData?.pageSize,
+            orderBy: {
+              key: "is_verified",
+              sort: "desc",
+            },
           },
         },
         500
@@ -84,15 +88,13 @@ const ContainerView = () => {
       variables: {
         page: fetchedData?.page,
         rows: fetchedData?.pageSize,
-            orderBy: {
-              key: "is_verified",
-              sort: "desc",
-            },
+        orderBy: {
+          key: "is_verified",
+          sort: "desc",
+        },
       },
     });
   }, [getAllProfiles, fetchedData?.page, fetchedData?.pageSize]);
-
-  
 
   //setting the state with new data
   useEffect(() => {
@@ -105,7 +107,7 @@ const ContainerView = () => {
     }
   }, [getAllProfilesData?.getAllProfiles]);
 
-  //setting the state with all profiles data
+  //setting the state with search data
   useEffect(() => {
     if (!searchedData) return;
     if (searchedData) {
@@ -113,12 +115,11 @@ const ContainerView = () => {
     }
   }, [searchedData]);
 
+  //using ref to see if the last element is on the page to fetchMore data
   useEffect(() => {
     if (isVisible && fetchedData?.profiles.length !== fetchedData?.size) {
-      
       pageNumberRef.current = pageNumberRef.current + 1;
 
-    
       fetchMore({
         variables: {
           rows: fetchedData?.pageSize,
@@ -141,8 +142,6 @@ const ContainerView = () => {
     }
   }, [isVisible, fetchMore, fetchedData?.pageSize]);
 
-
-
   return (
     <>
       <SearchBarContainer
@@ -157,11 +156,8 @@ const ContainerView = () => {
       {selectedView === "column" && (
         <CardView
           fetchedData={fetchedData}
-          loading={
-            (getAllProfilesLoading || searchLoading) && "Loading the Profiles"
-          }
+          loading={getAllProfilesLoading || searchLoading}
           error={getAllProfilesError || searchError}
-          
           scrollRef={scrollRef}
           setIsVisible={setIsVisible}
         />
@@ -170,14 +166,10 @@ const ContainerView = () => {
         <DataGridView
           fetchedData={fetchedData}
           loading={getAllProfilesLoading || searchLoading}
-          error={
-            (getAllProfilesError || searchError) &&
-            "Error Loading the Profiles Please Refresh and Try Again"
-          }
+          error={getAllProfilesError || searchError}
           setFetchedData={setFetchedData}
         />
       )}
-
       {openCreateProfileModal && (
         <CreateEditProfile
           openModal={openCreateProfileModal}

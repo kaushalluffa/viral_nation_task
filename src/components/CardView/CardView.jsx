@@ -1,4 +1,4 @@
-import { Alert, Box, CircularProgress, Grid } from "@mui/material";
+import Grid  from "@mui/material/Grid";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import { useState } from "react";
 import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";

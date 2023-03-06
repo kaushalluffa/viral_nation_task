@@ -18,7 +18,9 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
   //modal state
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
+const [sortModel, setSortModel] = useState([]);
 
+  const [rowsSorted, setRowsSorted] = useState(fetchedData?.profiles);
   const [currentData, setCurrentData] = useState(null);
 
   //state and modal open/close handlers
@@ -37,6 +39,29 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
     setOpenEditProfileModal(false);
   }
 
+   const handleSortModelChange = (model) => {
+     setSortModel(model);
+     const comparator = (a, b) => {
+       // Compare rows based on the column and sort direction specified in the sort model
+       for (const sort of model) {
+         const column = sort.field;
+         const direction = sort.sort;
+
+         if (column === "is_verified") {
+           const aVerified = a.is_verified ? 1 : 0;
+           const bVerified = b.is_verified ? 1 : 0;
+           const compare = aVerified - bVerified;
+           if (compare !== 0) return direction === "asc" ? compare : -compare;
+         } else {
+           const compare = (a[column] || "").localeCompare(b[column] || "");
+           if (compare !== 0) return direction === "asc" ? compare : -compare;
+         }
+       }
+       return 0;
+     };
+     setRowsSorted([...fetchedData?.profiles].sort(comparator));
+   };
+
   const columns = [
     {
       field: "name",
@@ -45,7 +70,7 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
       maxWidth: 280,
       hideSortIcons: true,
       disableColumnMenu: true,
-      sortable: false,
+      sortable: true,
       renderHeader: (params) => {
         return (
           <Box
@@ -108,7 +133,7 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
       disableColumnMenu: true,
       headerAlign: "center",
       hideSortIcons: true,
-      sortable: false,
+      sortable: true,
       renderCell: (params) => {
         return (
           <Typography variant="body2" m={"0 auto"} noWrap>
@@ -123,7 +148,8 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
       minWidth: 200,
       flex: 1,
       headerAlign: "left",
-
+      sortable: true,
+      
       renderCell: (params) => {
         return <Typography variant="body2">{params.value}</Typography>;
       },
@@ -137,6 +163,7 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
       disableColumnMenu: true,
       filterable: false,
       hideSortIcons: true,
+      sortable:true,
       renderCell: (params) => {
         return (
           <Box paddingBottom={0.5}>
@@ -153,10 +180,11 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
       field: "actions",
       headerName: "actions",
       headerAlign: "center",
-      sortable: false,
+      
       width: 52,
       disableColumnMenu: true,
       hideSortIcons: true,
+      sortable: true,
       getActions: (params) => [
         <GridActionsCellItem
           key={0}
@@ -256,6 +284,8 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
             setFetchedData((old) => ({ ...old, pageSize: newPageSize }))
           }
           columns={columns}
+          sortModel={sortModel}
+          onSortModelChange={handleSortModelChange}
         />
       </Stack>
       {openEditProfileModal && (
