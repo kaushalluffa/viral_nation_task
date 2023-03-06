@@ -1,42 +1,15 @@
-//components imports
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import SettingsIcon from "@mui/icons-material/Settings";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import React, { useEffect, useState } from "react";
 import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import DeleteModal from "../DeleteModal/DeleteModal";
-import CreateEditProfile from "../CreateEditProfile/CreateEditProfile";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import SettingsIcon from "@mui/icons-material/Settings";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
+import { useLazyQuery } from "@apollo/client";
+import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 
-//hooks imports
-import { useState } from "react";
-import Error from "../Error/Error";
-
-const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
+const TestDatagrid = () => {
   const theme = useTheme();
-
-  //modal state
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
-
-  const [currentData, setCurrentData] = useState(null);
-
-  //state and modal open/close handlers
-  function handleDeleteModalOpen(passedData) {
-    setOpenDeleteModal(true);
-    setCurrentData(passedData);
-  }
-  function handleDeleteModalClose() {
-    setOpenDeleteModal(false);
-  }
-  function handleOpenEditProfileModal(dataToEdit) {
-    setCurrentData(dataToEdit);
-    setOpenEditProfileModal(true);
-  }
-  function handleCloseEditProfileModal() {
-    setOpenEditProfileModal(false);
-  }
-
   const columns = [
     {
       field: "name",
@@ -77,18 +50,9 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
             }}
           >
             <Avatar
-              src={
-                params?.row?.image_url || "https://source.unsplash.com/random"
-              }
+              src="https://source.unsplash.com/random"
               aria-label="avatar"
-              sx={{
-                width: 48,
-                height: 48,
-              }}
-            >
-              {params?.row?.first_name.split("")[0]}
-              {params?.row?.last_name.split("")[0]}
-            </Avatar>
+            ></Avatar>
 
             <Typography maxWidth={100} variant="caption" noWrap>
               {params?.row?.first_name} {params?.row?.last_name}
@@ -194,88 +158,66 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
             }}
           >
             <DropdownMenu
-              onDelete={() => {
-                handleDeleteModalOpen(params.row);
-              }}
-              onEdit={() => handleOpenEditProfileModal(params.row)}
-              onClose={() => handleDeleteModalClose(params.row)}
-              openDeleteModal={openDeleteModal}
+            // onDelete={() => {
+            //   handleDeleteModalOpen(params.row);
+            // }}
+            // onEdit={() => handleOpenEditProfileModal(params.row)}
+            // onClose={() => handleDeleteModalClose(params.row)}
+            // openDeleteModal={openDeleteModal}
             />
           </Box>
         );
       },
     },
   ];
+  const [fetchedData, setFetchedData] = useState({
+    profiles: [],
+    size: 0,
+    page: 0,
+    pageSize: 10,
+  });
+  const [
+    getAllProfiles,
+    { data: getAllProfilesData, loading, error, fetchMore },
+  ] = useLazyQuery(GET_ALL_PROFILES);
+  useEffect(() => {
+    getAllProfiles({
+      variables: {
+        page: fetchedData?.page,
+        rows: fetchedData?.pageSize,
+      },
+    });
+  }, [getAllProfiles, fetchedData?.page, fetchedData?.pageSize]);
+  useEffect(() => {
+    if (getAllProfilesData?.getAllProfiles) {
+      setFetchedData((old) => ({
+        ...old,
+        profiles: getAllProfilesData?.getAllProfiles?.profiles,
+        size: getAllProfilesData?.getAllProfiles?.size,
+      }));
+    }
+  }, [getAllProfilesData?.getAllProfiles]);
+ 
   return (
-    <>
-      {error && (
-        <Error message="There has been error fetching profiles please refresh and try again" />
-      )}
-      <Stack
-        minHeight="70vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-            paddingRight: 4,
-            "& .MuiDataGrid-cell": {
-              borderBottom: theme.palette.mode === "light" && "none",
-              paddingLeft: 0,
-              paddingRight: 0,
-            },
-            "& .MuiDataGrid-columnHeader": {
-              paddingLeft: 0,
-              paddingRight: 0,
-            },
-          },
-          "& .MuiDataGrid-columnHeader .MuiDataGrid-columnSeparator ": {
-            display: "none",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            borderBottom: theme.palette.mode === "light" && "none",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "transparent",
-          },
-        }}
-      >
-        <DataGrid
-          disableSelectionOnClick
-          autoHeight
-          rows={fetchedData?.profiles}
-          rowCount={fetchedData.size}
-          loading={loading}
-          rowsPerPageOptions={[5, 10, 16, 30, 50, 70, 100]}
-          pagination
-          page={fetchedData.page}
-          pageSize={fetchedData.pageSize}
-          paginationMode="server"
-          onPageChange={(newPage) => {
-            setFetchedData((old) => ({ ...old, page: newPage }));
-          }}
-          onPageSizeChange={(newPageSize) =>
-            setFetchedData((old) => ({ ...old, pageSize: newPageSize }))
-          }
-          columns={columns}
-        />
-      </Stack>
-      {openEditProfileModal && (
-        <CreateEditProfile
-          openModal={openEditProfileModal}
-          handleOpenModal={handleOpenEditProfileModal}
-          handleCloseModal={handleCloseEditProfileModal}
-          type="Edit"
-          currentData={currentData}
-        />
-      )}
-      {openDeleteModal && (
-        <DeleteModal
-          openModal={openDeleteModal}
-          handleModalClose={handleDeleteModalClose}
-          id={currentData.id}
-        />
-      )}
-    </>
+    <DataGrid
+      autoHeight
+      rows={fetchedData?.profiles}
+      rowCount={fetchedData.size}
+      loading={loading}
+      rowsPerPageOptions={[5, 10, 30, 50, 70, 100]}
+      pagination
+      page={fetchedData.page}
+      pageSize={fetchedData.pageSize}
+      paginationMode="server"
+      onPageChange={(newPage) => {
+        setFetchedData((old) => ({ ...old, page: newPage }));
+      }}
+      onPageSizeChange={(newPageSize) =>
+        setFetchedData((old) => ({ ...old, pageSize: newPageSize }))
+      }
+      columns={columns}
+    />
   );
 };
 
-export default DataGridView;
+export default TestDatagrid;

@@ -10,15 +10,35 @@ import Box from "@mui/material/Box";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import useTheme from "@mui/material/styles/useTheme";
 import DropdownMenu from "../DropDownMenu/DropDownMenu";
+import { forwardRef, useEffect } from "react";
 
-export default function CardComponent({
+const CardComponent = ({
   data,
   handleDeleteModalOpen,
   handleDeleteModalClose,
   handleOpenEditProfileModal,
   openDeleteModal,
-}) {
+  setIsVisible,
+  scrollRef,
+}) => {
   const theme = useTheme();
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      {
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+    observer.observe(scrollRef?.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [scrollRef, setIsVisible]);
 
   return (
     <Card
@@ -116,10 +136,12 @@ export default function CardComponent({
               ? theme.palette.common.white
               : "text.secondary"
           }
+          ref={scrollRef}
         >
           {data?.description}
         </Typography>
       </CardContent>
     </Card>
   );
-}
+};
+export default CardComponent;
