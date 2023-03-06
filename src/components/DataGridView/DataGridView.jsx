@@ -18,9 +18,9 @@ const DataGridView = ({ fetchedData, loading, error, setFetchedData }) => {
   //modal state
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
-const [sortModel, setSortModel] = useState([]);
+  const [sortModel, setSortModel] = useState([]);
 
-  const [rowsSorted, setRowsSorted] = useState(fetchedData?.profiles);
+  const [rowsSorted, setRowsSorted] = useState([]);
   const [currentData, setCurrentData] = useState(null);
 
   //state and modal open/close handlers
@@ -39,28 +39,29 @@ const [sortModel, setSortModel] = useState([]);
     setOpenEditProfileModal(false);
   }
 
-   const handleSortModelChange = (model) => {
-     setSortModel(model);
-     const comparator = (a, b) => {
-       // Compare rows based on the column and sort direction specified in the sort model
-       for (const sort of model) {
-         const column = sort.field;
-         const direction = sort.sort;
+  const handleSortModelChange = (model) => {
+    setSortModel(model);
+    const comparator = (a, b) => {
+      // Compare rows based on the column and sort direction specified in the sort model
+      for (const sort of model) {
+        const column = sort.field;
+        const direction = sort.sort;
 
-         if (column === "is_verified") {
-           const aVerified = a.is_verified ? 1 : 0;
-           const bVerified = b.is_verified ? 1 : 0;
-           const compare = aVerified - bVerified;
-           if (compare !== 0) return direction === "asc" ? compare : -compare;
-         } else {
-           const compare = (a[column] || "").localeCompare(b[column] || "");
-           if (compare !== 0) return direction === "asc" ? compare : -compare;
-         }
-       }
-       return 0;
-     };
-     setRowsSorted([...fetchedData?.profiles].sort(comparator));
-   };
+        if (column === "is_verified") {
+          const aVerified = a.is_verified ? 1 : 0;
+          const bVerified = b.is_verified ? 1 : 0;
+          const compare = aVerified - bVerified;
+          if (compare !== 0) return direction === "asc" ? compare : -compare;
+        } else {
+          const compare = (a[column] || "").localeCompare(b[column] || "");
+          if (compare !== 0) return direction === "asc" ? compare : -compare;
+        }
+      }
+      return 0;
+    };
+   
+    setRowsSorted([...fetchedData?.profiles].sort(comparator));
+  };
 
   const columns = [
     {
@@ -149,7 +150,7 @@ const [sortModel, setSortModel] = useState([]);
       flex: 1,
       headerAlign: "left",
       sortable: true,
-      
+
       renderCell: (params) => {
         return <Typography variant="body2">{params.value}</Typography>;
       },
@@ -163,10 +164,10 @@ const [sortModel, setSortModel] = useState([]);
       disableColumnMenu: true,
       filterable: false,
       hideSortIcons: true,
-      sortable:true,
+      sortable: true,
       renderCell: (params) => {
         return (
-          <Box paddingBottom={0.5}>
+          <Box paddingBottom={0.4} paddingTop={.4}>
             <Typography variant="caption" fontSize={12}>
               {params.value}
             </Typography>
@@ -180,7 +181,7 @@ const [sortModel, setSortModel] = useState([]);
       field: "actions",
       headerName: "actions",
       headerAlign: "center",
-      
+
       width: 52,
       disableColumnMenu: true,
       hideSortIcons: true,
@@ -267,9 +268,10 @@ const [sortModel, setSortModel] = useState([]);
         }}
       >
         <DataGrid
+          experimentalFeatures={{ newEditingApi: true }}
           disableSelectionOnClick
           autoHeight
-          rows={fetchedData?.profiles}
+          rows={rowsSorted.length > 0 ? rowsSorted : fetchedData?.profiles}
           rowCount={fetchedData.size}
           loading={loading}
           rowsPerPageOptions={[5, 10, 16, 30, 50, 70, 100]}
@@ -286,6 +288,7 @@ const [sortModel, setSortModel] = useState([]);
           columns={columns}
           sortModel={sortModel}
           onSortModelChange={handleSortModelChange}
+          getRowHeight={() => "auto"}
         />
       </Stack>
       {openEditProfileModal && (

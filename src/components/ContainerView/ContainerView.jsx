@@ -9,24 +9,22 @@ import { GET_ALL_PROFILES } from "../../utils/queries/getAllProfiles";
 import { SEARCH_PROFILE } from "../../utils/queries/searchProfile";
 import { debounce } from "../../utils/handlers/debounce";
 import SearchBarContainer from "../SearchBarContainer/SearchBarContainer";
-import MyComponent from "../DataGridView/testgrid";
 
 const ContainerView = () => {
+  const pageNumberRef = useRef(0);
   const [fetchedData, setFetchedData] = useState({
     profiles: [],
     size: 0,
     page: 0,
     pageSize: 16,
   });
-  const [selectedView, setSelectedView] = useState("grid");
+  const [selectedView, setSelectedView] = useState("column");
   const isSmallScreen = useMediaQuery("(min-width:1100px");
   const [openCreateProfileModal, setOpenCreateProfileModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const [isVisible, setIsVisible] = useState(false);
   const scrollRef = useRef(null);
-
-  const pageNumberRef = useRef(0);
 
   //fetch all profiles query
   const [
