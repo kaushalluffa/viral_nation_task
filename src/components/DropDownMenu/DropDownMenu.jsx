@@ -4,8 +4,10 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import MoreVert from "@mui/icons-material/MoreVert";
+import { useTheme } from "@mui/material";
 
 const DropdownMenu = ({ onEdit, onDelete }) => {
+  const theme = useTheme()
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -18,9 +20,11 @@ const DropdownMenu = ({ onEdit, onDelete }) => {
 
   return (
     <>
-      <Box>
+      <Box >
         <IconButton onClick={handleMenuOpen}>
-          <MoreVert />
+          <MoreVert sx={{
+            color: theme.palette.grey[500]
+          }} />
         </IconButton>
         <Menu
           anchorEl={anchorEl}

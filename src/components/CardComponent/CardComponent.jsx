@@ -19,6 +19,7 @@ export default function CardComponent({
   openDeleteModal,
 }) {
   const theme = useTheme();
+
   return (
     <Card
       elevation={0}
@@ -31,7 +32,6 @@ export default function CardComponent({
       variant="contained"
     >
       <CardHeader
-       
         avatar={
           <Avatar
             src={data.image_url || "https://source.unsplash.com/random"}
@@ -67,11 +67,15 @@ export default function CardComponent({
           >
             <Typography
               variant="body2"
+              fontWeight={500}
               noWrap
               sx={{
                 display: "flex",
                 gap: 1,
               }}
+              color={
+                theme.palette.mode === "light" && theme.palette.text.primary
+              }
             >
               {data.first_name} {data.last_name}
               {data?.is_verified && (
@@ -86,7 +90,13 @@ export default function CardComponent({
               display: "flex",
             }}
           >
-            <Typography variant="body2" noWrap color="">
+            <Typography
+              variant="caption"
+              noWrap
+              color={
+                theme.palette.mode === "light" && theme.palette.text.primary
+              }
+            >
               {data.email}
             </Typography>
           </Box>
