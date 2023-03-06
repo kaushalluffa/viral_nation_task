@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import CardView from "../CardView/CardView";
 import DataGridView from "../DataGridView/DataGridView";
@@ -46,7 +46,7 @@ const ContainerView = () => {
   ] = useLazyQuery(SEARCH_PROFILE);
 
   //delaying the api request for search results 500ms
-  const searchForProfile = debounce((input, rows) => {
+  const searchForProfile = useCallback(debounce((input) => {
     searchProfile(
       {
         variables: {
@@ -56,7 +56,7 @@ const ContainerView = () => {
       },
       500
     );
-  });
+  }),[]);
 
   //modal open/close handlers
   function handleProfileModalOpen(data) {

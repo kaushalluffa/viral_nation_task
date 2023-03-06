@@ -1,9 +1,10 @@
-export function debounce(cb, delay = 500) {
+export function debounce(cb) {
   let timeout;
   return (...args) => {
-    clearTimeout(timeout);
+    if(timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
+      timeout = null;
       cb(...args);
-    }, delay);
+    }, 500);
   };
 }
